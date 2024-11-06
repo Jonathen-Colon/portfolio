@@ -1,5 +1,4 @@
-'use client';
-import { useEffect, useState } from "react";
+'use client'
 import FlickeringGrid from "@/components/ui/flickering-grid";
 import TypingAnimation from "@/components/ui/typing-animation";
 import { RainbowButton } from "@/components/ui/rainbow-button";
