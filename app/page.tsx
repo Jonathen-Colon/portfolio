@@ -2,7 +2,7 @@
 import FlickeringGrid from "@/components/ui/flickering-grid";
 import TypingAnimation from "@/components/ui/typing-animation";
 import { RainbowButton } from "@/components/ui/rainbow-button";
-import { Twitter, Mail, Github } from "lucide-react";
+import { X, Mail, Github } from "lucide-react";
 
 export default function Home() {
   return (
@@ -28,13 +28,13 @@ export default function Home() {
 
         {/* Social buttons */}
         <div className="flex gap-4">
-          <RainbowButton onClick={() => window.open('https://twitter.com/yourusername', '_blank')}>
-            <Twitter className="h-5 w-5" />
+          <RainbowButton onClick={() => window.open('https://x.com/JonathenColon', '_blank')}>
+            <X className="h-5 w-5" />
           </RainbowButton>
-          <RainbowButton onClick={() => window.open('mailto:your.email@example.com')}>
+          <RainbowButton onClick={() => window.open('mailto:jonathen@joncolon.dev')}>
             <Mail className="h-5 w-5" />
           </RainbowButton>
-          <RainbowButton onClick={() => window.open('https://github.com/yourusername', '_blank')}>
+          <RainbowButton onClick={() => window.open('https://github.com/Jonathen-Colon', '_blank')}>
             <Github className="h-5 w-5" />
           </RainbowButton>
         </div>
