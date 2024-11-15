@@ -1,0 +1,71 @@
+---
+title: Hello, World!
+description: Welcome to my blog! This is my first post exploring web development, markdown features, and code snippets.
+date: 2024-03-18
+tags: [welcome, markdown, code]
+---
+
+# Welcome to my blog!
+
+This is my first blog post written in MDX. MDX is a powerful format that lets you use React components right in your markdown!
+
+## Rich Text Features
+
+You can write text in **bold**, *italic*, or ***both***! You can also add [links](https://example.com) and `inline code`.
+
+### Lists and Quotes
+
+Here's what you can do with lists:
+
+1. First item
+2. Second item
+   - Nested item
+   - Another nested item
+3. Third item
+
+> This is a blockquote. You can use it to highlight important information or quotes from other sources.
+>
+> It can span multiple paragraphs too!
+
+### Code Blocks
+
+You can share code with syntax highlighting:
+
+```typescript
+interface BlogPost {
+  title: string;
+  description: string;
+  date: Date;
+  tags: string[];
+  content: string;
+}
+
+function formatDate(date: Date): string {
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }).format(date);
+}
+```
+
+### Tables
+
+| Feature | Description | Support |
+| ------- | ----------- | ------- |
+| MDX | Markdown + JSX | ✅ |
+| Code Highlighting | Syntax highlighting for code | ✅ |
+| Components | Use React components | ✅ |
+| Math | LaTeX-style equations | ✅ |
+
+## What's Next?
+
+I'll be sharing more posts about:
+
+- Web Development Best Practices
+- React and Next.js Tips
+- UI/UX Design Patterns
+- Performance Optimization
+- And much more!
+
+Stay tuned for more content! Feel free to reach out if you have any questions or suggestions.
