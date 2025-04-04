@@ -93,7 +93,7 @@ sections:
           - pr-4
         textAlign: left
   - type: ContactSection
-    colors: colors-e
+    colors: colors-f
     backgroundSize: full
     title: "Got an interesting project? Tell me more...\U0001F4AC"
     form:
