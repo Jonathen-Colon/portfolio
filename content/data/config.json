@@ -28,7 +28,7 @@
             {
                 "type": "Social",
                 "altText": "Twitter",
-                "label": "Twitter",
+                "label": "X",
                 "url": "https://twitter.com/netlify",
                 "icon": "twitter"
             },
