@@ -119,7 +119,7 @@ sections:
           hideLabel: true
           placeholder: Email
           isRequired: true
-          width: 1/2
+          width: full
           type: EmailFormControl
         - name: updatesConsent
           label: Sign me up to recieve updates
