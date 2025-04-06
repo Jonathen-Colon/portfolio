@@ -17,9 +17,11 @@ sections:
       I’m a developer, hopeful game dev, consultant and a bunch of other
       impressive titles and buzz words.
     subtitle: >-
-      This is my info—I’m sharing it all this with ya’ll to impress you with all
-      the hard work I’ve done in the past few years. Once you’re impressed, you
-      can continue to scroll down to see more details and credentials about me.
+      A multidisciplinary creator and developer dedicated to building immersive
+      digital worlds, intuitive AI-powered tools, and seamless user
+      experiences—whether it’s through game storytelling, full-stack
+      development, or crafting innovative SaaS platforms that empower creators,
+      developers, and dreamers alike.
     styles:
       self:
         height: auto
