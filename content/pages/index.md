@@ -17,11 +17,12 @@ sections:
       I’m a Web dev, hopeful game dev, consultant and a bunch of other buzz
       words.
     subtitle: >-
-      A multidisciplinary creator and developer dedicated to building immersive
-      digital worlds, intuitive AI-powered tools, and seamless user
-      experiences—whether it’s through game storytelling, full-stack
-      development, or crafting innovative SaaS platforms that empower creators,
-      developers, and dreamers alike.
+      I'm a multidisciplinary creator and developer who loves bringing ideas to
+      life—whether it's crafting immersive game worlds, building AI-powered
+      tools, designing sleek websites for clients, or dreaming up innovative
+      SaaS platforms. From full-stack magic to storytelling, I’m all about
+      creating intuitive, inspiring digital experiences that empower creators,
+      devs, and dreamers to do their thing.
     styles:
       self:
         height: auto
