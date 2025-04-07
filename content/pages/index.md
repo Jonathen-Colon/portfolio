@@ -14,7 +14,7 @@ sections:
     colors: colors-f
     backgroundSize: full
     title: >-
-      I’m a Web dev, hopeful game dev, consultant and a bunch of other buzz
+      I’m a web dev, hopeful game dev, consultant and a bunch of other buzz
       words.
     subtitle: >-
       I'm a multidisciplinary creator and developer who loves bringing ideas to
