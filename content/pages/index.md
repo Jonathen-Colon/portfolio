@@ -14,7 +14,7 @@ sections:
     colors: colors-f
     backgroundSize: full
     title: >-
-      I’m a Web dev, hopeful game dev, consultant and a bunch of other buzz
+      I’m a web dev, hopeful game dev, consultant and a bunch of other buzz
       words.
     subtitle: >-
       I'm a multidisciplinary creator and developer who loves bringing ideas to
@@ -54,9 +54,7 @@ sections:
     showReadMoreLink: true
     variant: variant-b
     projects:
-      - content/pages/projects/project-two.md
-      - content/pages/projects/project-three.md
-      - content/pages/projects/project-one.md
+      - content/pages/projects/primobartendingschool.md
     styles:
       self:
         height: auto
@@ -68,6 +66,7 @@ sections:
           - pr-4
         textAlign: left
     subtitle: Projects
+    title: Projects
   - type: FeaturedPostsSection
     elementId: ''
     colors: colors-f
@@ -80,8 +79,6 @@ sections:
         url: /blog
     posts:
       - content/pages/blog/post-six.md
-      - content/pages/blog/post-four.md
-      - content/pages/blog/post-three.md
     showDate: true
     showExcerpt: true
     showReadMoreLink: true
@@ -124,6 +121,13 @@ sections:
           isRequired: true
           width: full
           type: EmailFormControl
+        - type: TextareaFormControl
+          name: message
+          label: Message
+          hideLabel: true
+          placeholder: Type your message here
+          width: full
+          isRequired: false
         - name: updatesConsent
           label: Sign me up to recieve updates
           isRequired: false
