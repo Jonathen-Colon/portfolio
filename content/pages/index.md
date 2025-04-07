@@ -54,7 +54,7 @@ sections:
     showReadMoreLink: true
     variant: variant-b
     projects:
-      - content/pages/projects/project-two.md
+      - content/pages/projects/primobartendingschool.md
     styles:
       self:
         height: auto
