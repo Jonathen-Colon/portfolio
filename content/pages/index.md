@@ -14,8 +14,8 @@ sections:
     colors: colors-f
     backgroundSize: full
     title: >-
-      I’m a developer, hopeful game dev, consultant and a bunch of other
-      impressive titles and buzz words.
+      I’m a Web dev, hopeful game dev, consultant and a bunch of other buzz
+      words.
     subtitle: >-
       A multidisciplinary creator and developer dedicated to building immersive
       digital worlds, intuitive AI-powered tools, and seamless user
