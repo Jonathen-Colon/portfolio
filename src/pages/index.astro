@@ -3,7 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Coming Soon - Creative Studio Mood Board</title>
+    <link rel="icon" type="image/png" href="/icon.png" />
+    <title>Coming Soon - Jon Colon</title>
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link
@@ -28,10 +29,12 @@
         box-shadow:
           2px 3px 10px rgba(0, 0, 0, 0.05),
           10px 10px 0 rgba(0, 0, 0, 0.02);
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transition: box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transform-origin: center 27px; /* Approximate pin position */
+        will-change: transform;
       }
       .paper-card:hover {
-        transform: scale(1.01) rotate(0deg) !important;
+        /* transform: scale(1.01) rotate(0deg) !important; removed to let JS handle transform */
         box-shadow:
           4px 6px 15px rgba(0, 0, 0, 0.1),
           12px 12px 0 rgba(0, 0, 0, 0.03);
@@ -97,6 +100,30 @@
       .animate-blob {
         animation: float 12s infinite ease-in-out;
       }
+      @keyframes wind-drift {
+        0% {
+          transform: translateX(-100%) translateY(10px) rotate(-5deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.8;
+        }
+        90% {
+          opacity: 0.8;
+        }
+        100% {
+          transform: translateX(100vw) translateY(-10px) rotate(5deg);
+          opacity: 0;
+        }
+      }
+      .wind-gust {
+        position: absolute;
+        pointer-events: none;
+        opacity: 0;
+        z-index: 0;
+        color: #ccc5b9; /* Border color used as subtle wind color */
+        stroke: currentColor;
+      }
     </style>
   </head>
   <body
@@ -150,6 +177,47 @@
       >
         +
       </div>
+
+      <!-- Wind SVGs -->
+      <svg
+        class="wind-gust w-64 h-24 top-1/4 left-0"
+        style="animation: wind-drift 8s linear infinite; animation-delay: 0s;"
+        viewBox="0 0 200 100"
+      >
+        <path
+          d="M10,50 Q50,20 90,50 T170,50"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="3"
+          stroke-dasharray="10 5"
+          opacity="0.8"></path>
+      </svg>
+      <svg
+        class="wind-gust w-96 h-32 top-1/2 left-0"
+        style="animation: wind-drift 12s linear infinite; animation-delay: 4s;"
+        viewBox="0 0 300 100"
+      >
+        <path
+          d="M10,50 Q80,80 150,50 T290,50"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-dasharray="15 10"
+          opacity="0.6"></path>
+      </svg>
+      <svg
+        class="wind-gust w-48 h-16 bottom-1/3 left-0"
+        style="animation: wind-drift 10s linear infinite; animation-delay: 2s;"
+        viewBox="0 0 200 50"
+      >
+        <path
+          d="M10,25 Q50,5 90,25 T170,25"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-dasharray="5 5"
+          opacity="0.7"></path>
+      </svg>
     </div>
     <div
       class="relative z-10 flex flex-col min-h-screen w-full p-4 md:p-12 max-w-7xl mx-auto"
@@ -161,7 +229,8 @@
       >
         <div class="flex flex-col relative group">
           <div
-            class="paper-card bg-white p-8 md:p-12 relative transform -rotate-2 border border-gray-100"
+            class="paper-card bg-white p-8 md:p-12 relative border border-gray-100"
+            data-initial-rotation="-2"
           >
             <div class="pin pin-mustard" style="top: 15px;"></div>
             <div
@@ -195,28 +264,14 @@
               interaction design, branding, and creative direction. Be the first
               to see it.
             </p>
-            <div
-              class="absolute -bottom-12 -right-4 hidden md:block text-text-dark opacity-30 transform rotate-12"
-            >
-              <svg
-                fill="none"
-                height="60"
-                stroke="currentColor"
-                stroke-width="2"
-                viewBox="0 0 100 100"
-                width="80"
-              >
-                <path d="M10,10 Q50,50 90,90 M90,90 L70,90 M90,90 L90,70"
-                ></path>
-              </svg>
-            </div>
           </div>
         </div>
         <div
           class="flex flex-col relative mt-12 lg:mt-0 justify-self-center lg:justify-self-end w-full max-w-md"
         >
           <div
-            class="paper-card bg-white p-8 relative transform rotate-3 border-2 border-dashed border-gray-200"
+            class="paper-card bg-white p-8 relative border-2 border-dashed border-gray-200"
+            data-initial-rotation="3"
           >
             <div class="pin pin-terracotta" style="top: 15px;"></div>
             <div class="flex items-center gap-3 mb-6">
@@ -227,22 +282,32 @@
                 Get Early Access
               </h3>
             </div>
-            <form class="flex flex-col gap-4 w-full">
+            <form class="flex flex-col gap-4 w-full" id="subscribe-form">
               <div class="relative group">
                 <input
                   class="w-full h-14 px-4 bg-off-white-paper border-b-2 border-border-color focus:border-terracotta focus:ring-0 text-text-dark placeholder-text-light outline-none transition-colors rounded-t-md"
                   placeholder="Enter your email address..."
                   required=""
                   type="email"
+                  name="email"
+                  id="email-input"
                 />
               </div>
               <button
-                class="h-14 px-6 bg-terracotta hover:bg-terracotta/90 text-white font-quirky font-bold text-lg tracking-wide rounded-lg transition-all duration-300 transform hover:-translate-y-1 shadow-md shadow-terracotta/30 flex items-center justify-center gap-2"
+                class="h-14 px-6 bg-terracotta hover:bg-terracotta/90 text-white font-quirky font-bold text-lg tracking-wide rounded-lg transition-all duration-300 transform hover:-translate-y-1 shadow-md shadow-terracotta/30 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                 type="submit"
+                id="submit-btn"
               >
-                <span>Get Notified</span>
-                <span class="material-symbols-outlined">arrow_forward</span>
+                <span id="btn-text">Get Notified</span>
+                <span class="material-symbols-outlined" id="btn-icon"
+                  >arrow_forward</span
+                >
               </button>
+              <p
+                id="form-message"
+                class="text-sm font-quirky text-center hidden"
+              >
+              </p>
             </form>
             <p
               class="mt-4 text-xs text-text-light text-center font-medium opacity-70 font-quirky"
@@ -259,18 +324,20 @@
       </main>
       <footer class="w-full mt-auto pt-12 relative z-10">
         <div
-          class="bg-white p-6 shadow-sm border border-gray-100 rounded-sm transform -rotate-1 max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 paper-card relative"
+          class="bg-white p-6 shadow-sm border border-gray-100 rounded-sm max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 paper-card relative"
+          data-initial-rotation="-1"
+          style="transform-origin: center top;"
         >
           <div class="pin pin-soft-peach" style="top: -13px;"></div>
           <div class="order-2 md:order-1 text-text-dark font-medium text-sm">
-            © 2024 Jon Colon. All rights reserved.
+            © 2026 Jon Colon. All rights reserved.
           </div>
           <div class="flex gap-6 order-1 md:order-2">
             <a
               class="text-text-light hover:text-terracotta transition-colors transform hover:scale-110 duration-200"
-              href="#"
+              href="https://twitter.com/joncolon"
             >
-              <span class="sr-only">Twitter</span>
+              <span class="sr-only">X</span>
               <svg
                 aria-hidden="true"
                 class="h-6 w-6"
@@ -283,7 +350,7 @@
             </a>
             <a
               class="text-text-light hover:text-terracotta transition-colors transform hover:scale-110 duration-200"
-              href="#"
+              href="https://www.linkedin.com/in/jonathen-colon-51956789/?trk=public-profile-join-page"
             >
               <span class="sr-only">LinkedIn</span>
               <svg
@@ -297,7 +364,7 @@
                   fill-rule="evenodd"></path></svg
               >
             </a>
-            <a
+            <!-- <a
               class="text-text-light hover:text-terracotta transition-colors transform hover:scale-110 duration-200"
               href="#"
             >
@@ -312,10 +379,155 @@
                   d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c5.51 0 10-4.48 10-10S17.51 2 12 2zm6.605 4.61a8.502 8.502 0 011.93 5.314c-.281-.054-3.101-.629-5.943-.271-.065-.141-.12-.493-.184-.845a27.14 27.14 0 00-6.155-2.319 8.533 8.533 0 0110.352-1.88zm-5.714.708a26.315 26.315 0 015.424 2.146c-2.793 2.894-6.666 3.256-8.52 3.064-.047-.13-.082-.413-.118-.76-.057-.557-.087-1.127-.087-1.71 0-1.02.088-2.008.252-2.964.918.065 1.956.124 3.05.224zm-4.34 1.137c-.122.842-.187 1.724-.187 2.636 0 .432.015.856.044 1.274-2.618.36-6.198.058-7.796-.192a8.533 8.533 0 017.94-3.718zm-8.243 5.738c1.78.225 5.512.446 8.232.073.345 1.638.79 3.06 1.305 4.228-2.923 1.05-6.505.748-7.728.536a8.505 8.505 0 01-1.809-4.837zm10.73 6.012c-.56-1.258-1.036-2.784-1.396-4.526 2.05-.125 5.922-.647 8.61 2.302a8.532 8.532 0 01-7.214 2.224zm8.687-3.669c-2.585-2.58-6.075-2.257-8.083-2.152.285-1.554.49-3.054.606-4.49 3.055-.422 6.326.234 6.77.307a8.5 8.5 0 01.707 6.335z"
                   fill-rule="evenodd"></path></svg
               >
-            </a>
+            </a> -->
           </div>
         </div>
       </footer>
     </div>
+    <script>
+      class Pendulum {
+        element: HTMLElement;
+        angle: number;
+        velocity: number;
+        acceleration: number;
+        initialAngle: number;
+        // Physics constants
+        gravity: number = 0.25; // Restoring force strength (Slightly stiffer)
+        friction: number = 0.96; // Damping factor (0-1)
+        mass: number = 1.6; // Higher mass = slower acceleration
+
+        constructor(element: HTMLElement) {
+          this.element = element;
+          const initialRotation = parseFloat(
+            element.getAttribute("data-initial-rotation") || "0"
+          );
+          this.initialAngle = initialRotation;
+          this.angle = initialRotation;
+          this.velocity = 0;
+          this.acceleration = 0;
+        }
+
+        applyForce(force: number) {
+          this.acceleration += force / this.mass;
+        }
+
+        update() {
+          // 1. Gravity (Restoring force towards initial angle)
+          // The further we are from rest, the stronger the pull back
+          const displacement = this.angle - this.initialAngle;
+          const restoringForce = -this.gravity * displacement;
+          this.applyForce(restoringForce);
+
+          // 2. Physics integration
+          this.velocity += this.acceleration;
+          this.velocity *= this.friction; // Damping
+          this.angle += this.velocity;
+
+          // Reset acceleration for next frame
+          this.acceleration = 0;
+
+          // 3. Render
+          this.element.style.transform = `rotate(${this.angle}deg)`;
+        }
+      }
+
+      // Initialize system
+      const cards = document.querySelectorAll(
+        ".paper-card"
+      ) as NodeListOf<HTMLElement>;
+      const pendulums = Array.from(cards).map((card) => new Pendulum(card));
+
+      // Main Loop
+      const loop = () => {
+        // Wind Physics
+        const time = Date.now() * 0.001; // Seconds
+        // Base wind: always swaying slightly
+        // Gusts: varied sine waves
+        // moderate strength for visible but gentle sway
+        const windStrength =
+          Math.sin(time) * 0.15 + // Slow base sway (was 0.05)
+          Math.sin(time * 2.5) * 0.05 + // Faster jitters (was 0.02)
+          Math.sin(time * 0.5) * 0.2; // Long gusts (was 0.1)
+
+        pendulums.forEach((p, index) => {
+          // Add phase offset based on index so they don't move in perfect unison
+          // Some cards might be "shielded" or react differently (random factor)
+          const phase = index * 2;
+          const localWind = windStrength + Math.sin(time + phase) * 0.05;
+
+          p.applyForce(localWind);
+          p.update();
+        });
+
+        requestAnimationFrame(loop);
+      };
+
+      // Start
+      loop();
+
+      // Form Handling
+      const form = document.getElementById("subscribe-form") as HTMLFormElement;
+      const emailInput = document.getElementById(
+        "email-input"
+      ) as HTMLInputElement;
+      const submitBtn = document.getElementById(
+        "submit-btn"
+      ) as HTMLButtonElement;
+      const btnText = document.getElementById("btn-text") as HTMLElement;
+      const btnIcon = document.getElementById("btn-icon") as HTMLElement;
+      const formMessage = document.getElementById(
+        "form-message"
+      ) as HTMLElement;
+
+      if (form) {
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const email = emailInput.value;
+          if (!email) return;
+
+          // Loading State
+          submitBtn.disabled = true;
+          const originalText = btnText.innerText;
+          btnText.innerText = "Joining...";
+
+          try {
+            const res = await fetch("/api/subscribe", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email }),
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+              // Success
+              formMessage.innerText = "You're on the list! Talk soon.";
+              formMessage.className =
+                "text-sm font-quirky text-center mt-2 text-terracotta font-bold block";
+              emailInput.value = "";
+              btnText.innerText = "Joined!";
+              btnIcon.innerText = "check";
+
+              setTimeout(() => {
+                submitBtn.disabled = false;
+                btnText.innerText = originalText;
+                btnIcon.innerText = "arrow_forward";
+                formMessage.classList.add("hidden");
+              }, 5000);
+            } else {
+              // Error
+              throw new Error(data.message || "Something went wrong");
+            }
+          } catch (err: any) {
+            formMessage.innerText = err.message || "Failed to join. Try again.";
+            formMessage.className =
+              "text-sm font-quirky text-center mt-2 text-red-500 block";
+            submitBtn.disabled = false;
+            btnText.innerText = originalText;
+          }
+        });
+      }
+    </script>
   </body>
 </html>
