@@ -1,423 +1,525 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <link rel="icon" type="image/png" href="/icon.png" />
-    <title>Coming Soon - Jon Colon</title>
-    <link href="https://fonts.googleapis.com" rel="preconnect" />
-    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-      rel="stylesheet"
-    />
-    <style is:global>
-      body {
-        background-color: #f9f7f1;
-        background-image:
-          url("https://lh3.googleusercontent.com/aida-public/AB6AXuB5E9o7bP55jsDjBP8iXTH4VnObs_inbB4LVi8in_pfz6giHQQL0mHRdDPsevz-CXvBMjOJ1OgSkixHHNWABEBOYZ2RrKXrhq4xh83ECQAk81j-r6s7R-YoZL5ndVWAqRGe6K6OvEtiM0q88CXAOb4iDav4pFbrx9TTRQend6ARn_10v-o6sYgw2RKqN7KeWrvGrdVDSRVq5ndRKdez8jfaNHYT86Wd-8ivKzy2UalqSeU2nc06yGioP9URI7wzh5T6oUPrxBaiRb4"),
-          url("https://www.transparenttextures.com/patterns/notebook.png");
-        background-blend-mode: overlay, multiply;
-        background-size: cover, auto;
-      }
-      .paper-card {
-        border-radius: 2px;
-        box-shadow:
-          2px 3px 10px rgba(0, 0, 0, 0.05),
-          10px 10px 0 rgba(0, 0, 0, 0.02);
-        transition: box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        transform-origin: center 27px; /* Approximate pin position */
-        will-change: transform;
-      }
-      .paper-card:hover {
-        /* transform: scale(1.01) rotate(0deg) !important; removed to let JS handle transform */
-        box-shadow:
-          4px 6px 15px rgba(0, 0, 0, 0.1),
-          12px 12px 0 rgba(0, 0, 0, 0.03);
-        z-index: 30;
-      }
-      .pin {
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 40;
-        box-shadow:
-          2px 4px 8px rgba(0, 0, 0, 0.25),
-          inset 2px 2px 5px rgba(255, 255, 255, 0.7),
-          inset -2px -2px 6px rgba(0, 0, 0, 0.1);
-      }
-      .pin::after {
-        content: "";
-        position: absolute;
-        top: 5px;
-        left: 6px;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: linear-gradient(
-          135deg,
-          rgba(255, 255, 255, 0.95) 0%,
-          rgba(255, 255, 255, 0.1) 100%
-        );
-        filter: blur(0.5px);
-      }
-      .pin-terracotta {
-        background-color: #d96c4e;
-        background: radial-gradient(circle at 40% 40%, #e68870, #d96c4e);
-        border: 1px solid #c25b3d;
-      }
-      .pin-mustard {
-        background-color: #f4c47b;
-        background: radial-gradient(circle at 40% 40%, #fce0b0, #f4c47b);
-        border: 1px solid #dea652;
-      }
-      .pin-soft-peach {
-        background-color: #fadadd;
-        background: radial-gradient(circle at 40% 40%, #fff0f3, #fadadd);
-        border: 1px solid #e3c1c4;
-      }
-      @keyframes float {
-        0% {
-          transform: translate(0, 0) rotate(0deg);
-        }
-        33% {
-          transform: translate(10px, -15px) rotate(2deg);
-        }
-        66% {
-          transform: translate(-5px, 10px) rotate(-1deg);
-        }
-        100% {
-          transform: translate(0, 0) rotate(0deg);
-        }
-      }
-      .animate-blob {
-        animation: float 12s infinite ease-in-out;
-      }
-      @keyframes wind-drift {
-        0% {
-          transform: translateX(-100%) translateY(10px) rotate(-5deg);
-          opacity: 0;
-        }
-        10% {
-          opacity: 0.8;
-        }
-        90% {
-          opacity: 0.8;
-        }
-        100% {
-          transform: translateX(100vw) translateY(-10px) rotate(5deg);
-          opacity: 0;
-        }
-      }
-      .wind-gust {
-        position: absolute;
-        pointer-events: none;
-        opacity: 0;
-        z-index: 0;
-        color: #ccc5b9; /* Border color used as subtle wind color */
-        stroke: currentColor;
-      }
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <link rel="icon" type="image/png" href="/icon.png" />
+        <title>Coming Soon - Jon Colon</title>
+        <link href="https://fonts.googleapis.com" rel="preconnect" />
+        <link
+            crossorigin=""
+            href="https://fonts.gstatic.com"
+            rel="preconnect"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+            rel="stylesheet"
+        />
+        <style is:global>
+            body {
+                background-color: #f9f7f1;
+                background-image:
+                    url("https://lh3.googleusercontent.com/aida-public/AB6AXuB5E9o7bP55jsDjBP8iXTH4VnObs_inbB4LVi8in_pfz6giHQQL0mHRdDPsevz-CXvBMjOJ1OgSkixHHNWABEBOYZ2RrKXrhq4xh83ECQAk81j-r6s7R-YoZL5ndVWAqRGe6K6OvEtiM0q88CXAOb4iDav4pFbrx9TTRQend6ARn_10v-o6sYgw2RKqN7KeWrvGrdVDSRVq5ndRKdez8jfaNHYT86Wd-8ivKzy2UalqSeU2nc06yGioP9URI7wzh5T6oUPrxBaiRb4"),
+                    url("https://www.transparenttextures.com/patterns/notebook.png");
+                background-blend-mode: overlay, multiply;
+                background-size: cover, auto;
+            }
+            .paper-card {
+                border-radius: 2px;
+                box-shadow:
+                    2px 3px 10px rgba(0, 0, 0, 0.05),
+                    10px 10px 0 rgba(0, 0, 0, 0.02);
+                transition: box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+                transform-origin: center 27px; /* Approximate pin position */
+                will-change: transform;
+            }
+            .paper-card:hover {
+                /* transform: scale(1.01) rotate(0deg) !important; removed to let JS handle transform */
+                box-shadow:
+                    4px 6px 15px rgba(0, 0, 0, 0.1),
+                    12px 12px 0 rgba(0, 0, 0, 0.03);
+                z-index: 30;
+            }
+            .pin {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 40;
+                box-shadow:
+                    2px 4px 8px rgba(0, 0, 0, 0.25),
+                    inset 2px 2px 5px rgba(255, 255, 255, 0.7),
+                    inset -2px -2px 6px rgba(0, 0, 0, 0.1);
+            }
+            .pin::after {
+                content: "";
+                position: absolute;
+                top: 5px;
+                left: 6px;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: linear-gradient(
+                    135deg,
+                    rgba(255, 255, 255, 0.95) 0%,
+                    rgba(255, 255, 255, 0.1) 100%
+                );
+                filter: blur(0.5px);
+            }
+            .pin-terracotta {
+                background-color: #d96c4e;
+                background: radial-gradient(
+                    circle at 40% 40%,
+                    #e68870,
+                    #d96c4e
+                );
+                border: 1px solid #c25b3d;
+            }
+            .pin-mustard {
+                background-color: #f4c47b;
+                background: radial-gradient(
+                    circle at 40% 40%,
+                    #fce0b0,
+                    #f4c47b
+                );
+                border: 1px solid #dea652;
+            }
+            .pin-soft-peach {
+                background-color: #fadadd;
+                background: radial-gradient(
+                    circle at 40% 40%,
+                    #fff0f3,
+                    #fadadd
+                );
+                border: 1px solid #e3c1c4;
+            }
+            @keyframes float {
+                0% {
+                    transform: translate(0, 0) rotate(0deg);
+                }
+                33% {
+                    transform: translate(10px, -15px) rotate(2deg);
+                }
+                66% {
+                    transform: translate(-5px, 10px) rotate(-1deg);
+                }
+                100% {
+                    transform: translate(0, 0) rotate(0deg);
+                }
+            }
+            .animate-blob {
+                animation: float 12s infinite ease-in-out;
+            }
+            @keyframes wind-drift {
+                0% {
+                    transform: translateX(-100%) translateY(10px) rotate(-5deg);
+                    opacity: 0;
+                }
+                10% {
+                    opacity: 0.8;
+                }
+                90% {
+                    opacity: 0.8;
+                }
+                100% {
+                    transform: translateX(100vw) translateY(-10px) rotate(5deg);
+                    opacity: 0;
+                }
+            }
+            .wind-gust {
+                position: absolute;
+                pointer-events: none;
+                opacity: 0;
+                z-index: 0;
+                color: #ccc5b9; /* Border color used as subtle wind color */
+                stroke: currentColor;
+            }
+            .wind-gust::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                border-radius: 50%;
+                opacity: 0;
+                animation: wind-gust 10s infinite ease-in-out;
+            }
 
-      /* Floating particles */
-      .particle {
-        position: absolute;
-        border-radius: 50%;
-        pointer-events: none;
-        opacity: 0;
-        animation: particle-float linear infinite;
-      }
+            @keyframes wind-gust {
+                0% {
+                    transform: translateX(-100%) translateY(10px) rotate(-5deg);
+                    opacity: 0;
+                }
+                10% {
+                    opacity: 0.8;
+                }
+                90% {
+                    opacity: 0.8;
+                }
+                100% {
+                    transform: translateX(100vw) translateY(-10px) rotate(5deg);
+                    opacity: 0;
+                }
+            }
+            /* Floating particles */
+            .particle {
+                position: absolute;
+                border-radius: 50%;
+                pointer-events: none;
+                opacity: 0;
+                animation: particle-float linear infinite;
+            }
 
-      @keyframes particle-float {
-        0% {
-          transform: translateY(100vh) translateX(0) rotate(0deg);
-          opacity: 0;
-        }
-        5% {
-          opacity: var(--particle-opacity, 0.4);
-        }
-        95% {
-          opacity: var(--particle-opacity, 0.4);
-        }
-        100% {
-          transform: translateY(-20vh) translateX(var(--drift, 50px)) rotate(360deg);
-          opacity: 0;
-        }
-      }
+            @keyframes particle-float {
+                0% {
+                    transform: translateY(100vh) translateX(0) rotate(0deg);
+                    opacity: 0;
+                }
+                5% {
+                    opacity: var(--particle-opacity, 0.4);
+                }
+                95% {
+                    opacity: var(--particle-opacity, 0.4);
+                }
+                100% {
+                    transform: translateY(-20vh) translateX(var(--drift, 50px))
+                        rotate(360deg);
+                    opacity: 0;
+                }
+            }
 
-      /* Subtle grain overlay for texture */
-      .grain-overlay {
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        opacity: 0.03;
-        z-index: 100;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-      }
-    </style>
-  </head>
-  <body
-    class="bg-off-white-paper font-sans text-text-dark min-h-screen relative overflow-x-hidden selection:bg-terracotta selection:text-white"
-  >
-    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-      <svg
-        class="absolute top-10 left-10 w-48 h-48 text-terracotta opacity-20 animate-blob"
-        style="animation-duration: 15s;"
-        viewBox="0 0 200 200"
-      >
-        <path
-          d="M45.7,-51.3C57.3,-39.8,63.4,-23.4,62.1,-7.8C60.8,7.8,52.1,22.6,41.9,35.3C31.7,48,20.1,58.6,4.7,63.3C-10.7,68,-29.9,66.8,-43.3,56.7C-56.7,46.6,-64.3,27.5,-65.8,8.2C-67.3,-11.1,-62.7,-30.6,-50.7,-42.6C-38.6,-54.6,-19.3,-59.1,-1.2,-57.7C16.9,-56.3,34.1,-62.8,45.7,-51.3Z"
-          fill="currentColor"
-          transform="translate(100 100)"></path>
-      </svg>
-      <svg
-        class="absolute bottom-20 right-10 w-64 h-64 text-mustard-yellow opacity-30 animate-blob"
-        style="animation-delay: 2s; animation-duration: 18s;"
-        viewBox="0 0 200 200"
-      >
-        <path
-          d="M41.3,-49.8C54.4,-38.3,66.4,-26.4,70.1,-12.3C73.8,1.8,69.2,18.1,59.3,31.7C49.4,45.3,34.1,56.2,18,60.9C1.9,65.6,-15.1,64.1,-30.2,56.4C-45.3,48.7,-58.5,34.8,-63.9,18.7C-69.3,2.6,-66.9,-15.7,-57.1,-29.9C-47.3,-44.1,-30.1,-54.2,-13.6,-56.8C2.9,-59.4,28.2,-61.3,41.3,-49.8Z"
-          fill="currentColor"
-          transform="translate(100 100)"></path>
-      </svg>
-      <svg
-        class="absolute top-1/3 right-1/4 w-32 h-32 text-soft-peach opacity-60 animate-blob"
-        style="animation-delay: 4s;"
-        viewBox="0 0 200 200"
-      >
-        <circle cx="100" cy="100" fill="currentColor" r="80"></circle>
-      </svg>
-      <svg
-        class="absolute bottom-1/4 left-20 w-40 h-40 text-text-dark opacity-10"
-        fill="none"
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-width="3"
-        viewBox="0 0 100 100"
-      >
-        <path d="M10,50 Q25,25 40,50 T70,50 T100,50"></path>
-      </svg>
-      <div
-        class="absolute top-24 right-24 text-terracotta opacity-40 text-4xl font-quirky rotate-12"
-      >
-        +
-      </div>
-      <div
-        class="absolute bottom-32 left-1/2 text-mustard-yellow opacity-60 text-5xl font-quirky -rotate-12"
-      >
-        +
-      </div>
-
-      <!-- Wind SVGs -->
-      <svg
-        class="wind-gust w-64 h-24 top-1/4 left-0"
-        style="animation: wind-drift 8s linear infinite; animation-delay: 0s;"
-        viewBox="0 0 200 100"
-      >
-        <path
-          d="M10,50 Q50,20 90,50 T170,50"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="3"
-          stroke-dasharray="10 5"
-          opacity="0.8"></path>
-      </svg>
-      <svg
-        class="wind-gust w-96 h-32 top-1/2 left-0"
-        style="animation: wind-drift 12s linear infinite; animation-delay: 4s;"
-        viewBox="0 0 300 100"
-      >
-        <path
-          d="M10,50 Q80,80 150,50 T290,50"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-          stroke-dasharray="15 10"
-          opacity="0.6"></path>
-      </svg>
-      <svg
-        class="wind-gust w-48 h-16 bottom-1/3 left-0"
-        style="animation: wind-drift 10s linear infinite; animation-delay: 2s;"
-        viewBox="0 0 200 50"
-      >
-        <path
-          d="M10,25 Q50,5 90,25 T170,25"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-dasharray="5 5"
-          opacity="0.7"></path>
-      </svg>
-
-      <!-- Floating particles -->
-      <div class="particle bg-terracotta" style="left: 10%; width: 6px; height: 6px; animation-duration: 18s; animation-delay: 0s; --drift: 80px; --particle-opacity: 0.3;"></div>
-      <div class="particle bg-mustard-yellow" style="left: 25%; width: 8px; height: 8px; animation-duration: 22s; animation-delay: 3s; --drift: -60px; --particle-opacity: 0.4;"></div>
-      <div class="particle bg-soft-peach" style="left: 40%; width: 5px; height: 5px; animation-duration: 16s; animation-delay: 6s; --drift: 100px; --particle-opacity: 0.5;"></div>
-      <div class="particle bg-terracotta" style="left: 55%; width: 4px; height: 4px; animation-duration: 20s; animation-delay: 2s; --drift: -40px; --particle-opacity: 0.25;"></div>
-      <div class="particle bg-mustard-yellow" style="left: 70%; width: 7px; height: 7px; animation-duration: 24s; animation-delay: 8s; --drift: 70px; --particle-opacity: 0.35;"></div>
-      <div class="particle bg-soft-peach" style="left: 85%; width: 6px; height: 6px; animation-duration: 19s; animation-delay: 4s; --drift: -90px; --particle-opacity: 0.45;"></div>
-      <div class="particle bg-terracotta" style="left: 15%; width: 3px; height: 3px; animation-duration: 15s; animation-delay: 10s; --drift: 50px; --particle-opacity: 0.2;"></div>
-      <div class="particle bg-mustard-yellow" style="left: 60%; width: 5px; height: 5px; animation-duration: 21s; animation-delay: 5s; --drift: -30px; --particle-opacity: 0.3;"></div>
-      <div class="particle bg-soft-peach" style="left: 35%; width: 4px; height: 4px; animation-duration: 17s; animation-delay: 9s; --drift: 60px; --particle-opacity: 0.4;"></div>
-      <div class="particle bg-border-color" style="left: 80%; width: 3px; height: 3px; animation-duration: 23s; animation-delay: 7s; --drift: -70px; --particle-opacity: 0.15;"></div>
-      <div class="particle bg-terracotta" style="left: 45%; width: 5px; height: 5px; animation-duration: 26s; animation-delay: 12s; --drift: 40px; --particle-opacity: 0.28;"></div>
-      <div class="particle bg-mustard-yellow" style="left: 5%; width: 4px; height: 4px; animation-duration: 20s; animation-delay: 14s; --drift: -55px; --particle-opacity: 0.32;"></div>
-    </div>
-
-    <!-- Grain overlay for texture -->
-    <div class="grain-overlay"></div>
-    <div
-      class="relative z-10 flex flex-col min-h-screen w-full p-4 md:p-12 max-w-7xl mx-auto"
+            /* Subtle grain overlay for texture */
+            .grain-overlay {
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+                opacity: 0.03;
+                z-index: 100;
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            }
+        </style>
+    </head>
+    <body
+        class="bg-off-white-paper font-sans text-text-dark min-h-screen relative overflow-x-hidden selection:bg-terracotta selection:text-white"
     >
-      <header class="w-full flex justify-between items-center z-20 h-16">
-      </header>
-      <main
-        class="flex-grow grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center py-8"
-      >
-        <div class="flex flex-col relative group">
-          <div
-            class="paper-card bg-white p-8 md:p-12 relative border border-gray-100"
-            data-initial-rotation="-2"
-          >
-            <div class="pin pin-mustard" style="top: 15px;"></div>
+        <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+            <svg
+                class="absolute top-10 left-10 w-48 h-48 text-terracotta opacity-20 animate-blob"
+                style="animation-duration: 15s;"
+                viewBox="0 0 200 200"
+            >
+                <path
+                    d="M45.7,-51.3C57.3,-39.8,63.4,-23.4,62.1,-7.8C60.8,7.8,52.1,22.6,41.9,35.3C31.7,48,20.1,58.6,4.7,63.3C-10.7,68,-29.9,66.8,-43.3,56.7C-56.7,46.6,-64.3,27.5,-65.8,8.2C-67.3,-11.1,-62.7,-30.6,-50.7,-42.6C-38.6,-54.6,-19.3,-59.1,-1.2,-57.7C16.9,-56.3,34.1,-62.8,45.7,-51.3Z"
+                    fill="currentColor"
+                    transform="translate(100 100)"></path>
+            </svg>
+            <svg
+                class="absolute bottom-20 right-10 w-64 h-64 text-mustard-yellow opacity-30 animate-blob"
+                style="animation-delay: 2s; animation-duration: 18s;"
+                viewBox="0 0 200 200"
+            >
+                <path
+                    d="M41.3,-49.8C54.4,-38.3,66.4,-26.4,70.1,-12.3C73.8,1.8,69.2,18.1,59.3,31.7C49.4,45.3,34.1,56.2,18,60.9C1.9,65.6,-15.1,64.1,-30.2,56.4C-45.3,48.7,-58.5,34.8,-63.9,18.7C-69.3,2.6,-66.9,-15.7,-57.1,-29.9C-47.3,-44.1,-30.1,-54.2,-13.6,-56.8C2.9,-59.4,28.2,-61.3,41.3,-49.8Z"
+                    fill="currentColor"
+                    transform="translate(100 100)"></path>
+            </svg>
+            <svg
+                class="absolute top-1/3 right-1/4 w-32 h-32 text-soft-peach opacity-60 animate-blob"
+                style="animation-delay: 4s;"
+                viewBox="0 0 200 200"
+            >
+                <circle cx="100" cy="100" fill="currentColor" r="80"></circle>
+            </svg>
+            <svg
+                class="absolute bottom-1/4 left-20 w-40 h-40 text-text-dark opacity-10"
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-width="3"
+                viewBox="0 0 100 100"
+            >
+                <path d="M10,50 Q25,25 40,50 T70,50 T100,50"></path>
+            </svg>
             <div
-              class="inline-block px-4 py-2 rounded-full bg-soft-peach/30 border border-terracotta/20 text-sm tracking-wide uppercase font-bold text-terracotta mb-6"
+                class="absolute top-24 right-24 text-terracotta opacity-40 text-4xl font-quirky rotate-12"
             >
-              Portfolio
+                +
             </div>
-            <h1
-              class="text-5xl md:text-6xl lg:text-7xl font-quirky font-bold text-text-dark leading-[0.95] mb-8"
+            <div
+                class="absolute bottom-32 left-1/2 text-mustard-yellow opacity-60 text-5xl font-quirky -rotate-12"
             >
-              Something Bold <br class="hidden md:block" />
-              <span class="relative inline-block">
-                is Brewing.
-                <svg
-                  class="absolute w-full h-3 -bottom-1 left-0 text-mustard-yellow opacity-70"
-                  preserveAspectRatio="none"
-                  viewBox="0 0 100 10"
-                >
-                  <path
-                    d="M0 5 Q 50 10 100 5"
+                +
+            </div>
+
+            <!-- Wind SVGs -->
+            <svg
+                class="wind-gust w-64 h-24 top-1/4 left-0"
+                style="animation: wind-drift 8s linear infinite; animation-delay: 0s;"
+                viewBox="0 0 200 100"
+            >
+                <path
+                    d="M10,50 Q50,20 90,50 T170,50"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="8"></path>
-                </svg>
-              </span>
-            </h1>
-            <p
-              class="text-xl text-text-light font-medium leading-relaxed max-w-lg"
+                    stroke-width="3"
+                    stroke-dasharray="10 5"
+                    opacity="0.8"></path>
+            </svg>
+            <svg
+                class="wind-gust w-96 h-32 top-1/2 left-0"
+                style="animation: wind-drift 12s linear infinite; animation-delay: 4s;"
+                viewBox="0 0 300 100"
             >
-              I'm currently building a new home for my work. A showcase of
-              interaction design, branding, and creative direction. Be the first
-              to see it!
-            </p>
-          </div>
-        </div>
-        <div
-          class="flex flex-col relative mt-12 lg:mt-0 justify-self-center lg:justify-self-end w-full max-w-md"
-        >
-          <div
-            class="paper-card bg-white p-8 relative border-2 border-dashed border-gray-200"
-            data-initial-rotation="3"
-          >
-            <div class="pin pin-terracotta" style="top: 15px;"></div>
-            <div class="flex items-center gap-3 mb-6">
-              <div class="p-2 bg-mustard-yellow/20 rounded-lg text-terracotta">
-                <span class="material-symbols-outlined">mail</span>
-              </div>
-              <h3 class="font-quirky text-2xl font-bold text-text-dark">
-                Get Early Access
-              </h3>
-            </div>
-            <form class="flex flex-col gap-4 w-full" id="subscribe-form">
-              <div class="relative group">
-                <input
-                  class="w-full h-14 px-4 bg-off-white-paper border-b-2 border-border-color focus:border-terracotta focus:ring-0 text-text-dark placeholder-text-light outline-none transition-colors rounded-t-md"
-                  placeholder="Enter your email address..."
-                  required=""
-                  type="email"
-                  name="email"
-                  id="email-input"
-                />
-              </div>
-              <button
-                class="h-14 px-6 bg-terracotta hover:bg-terracotta/90 text-white font-quirky font-bold text-lg tracking-wide rounded-lg transition-all duration-300 transform hover:-translate-y-1 shadow-md shadow-terracotta/30 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
-                type="submit"
-                id="submit-btn"
-              >
-                <span id="btn-text">Get Notified</span>
-                <span class="material-symbols-outlined" id="btn-icon"
-                  >arrow_forward</span
-                >
-              </button>
-              <p
-                id="form-message"
-                class="text-sm font-quirky text-center hidden"
-              >
-              </p>
-            </form>
-            <p
-              class="mt-4 text-xs text-text-light text-center font-medium opacity-70 font-quirky"
+                <path
+                    d="M10,50 Q80,80 150,50 T290,50"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-dasharray="15 10"
+                    opacity="0.6"></path>
+            </svg>
+            <svg
+                class="wind-gust w-48 h-16 bottom-1/3 left-0"
+                style="animation: wind-drift 10s linear infinite; animation-delay: 2s;"
+                viewBox="0 0 200 50"
             >
-              No spam, just updates on the launch.
-            </p>
+                <path
+                    d="M10,25 Q50,5 90,25 T170,25"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-dasharray="5 5"
+                    opacity="0.7"></path>
+            </svg>
+
+            <!-- Floating particles -->
             <div
-              class="absolute -bottom-4 -left-4 w-16 h-16 bg-mustard-yellow rounded-full flex items-center justify-center text-white font-bold text-xs transform -rotate-12 shadow-lg z-20"
+                class="particle bg-terracotta"
+                style="left: 10%; width: 6px; height: 6px; animation-duration: 18s; animation-delay: 0s; --drift: 80px; --particle-opacity: 0.3;"
             >
-              SOON!
             </div>
-          </div>
+            <div
+                class="particle bg-mustard-yellow"
+                style="left: 25%; width: 8px; height: 8px; animation-duration: 22s; animation-delay: 3s; --drift: -60px; --particle-opacity: 0.4;"
+            >
+            </div>
+            <div
+                class="particle bg-soft-peach"
+                style="left: 40%; width: 5px; height: 5px; animation-duration: 16s; animation-delay: 6s; --drift: 100px; --particle-opacity: 0.5;"
+            >
+            </div>
+            <div
+                class="particle bg-terracotta"
+                style="left: 55%; width: 4px; height: 4px; animation-duration: 20s; animation-delay: 2s; --drift: -40px; --particle-opacity: 0.25;"
+            >
+            </div>
+            <div
+                class="particle bg-mustard-yellow"
+                style="left: 70%; width: 7px; height: 7px; animation-duration: 24s; animation-delay: 8s; --drift: 70px; --particle-opacity: 0.35;"
+            >
+            </div>
+            <div
+                class="particle bg-soft-peach"
+                style="left: 85%; width: 6px; height: 6px; animation-duration: 19s; animation-delay: 4s; --drift: -90px; --particle-opacity: 0.45;"
+            >
+            </div>
+            <div
+                class="particle bg-terracotta"
+                style="left: 15%; width: 3px; height: 3px; animation-duration: 15s; animation-delay: 10s; --drift: 50px; --particle-opacity: 0.2;"
+            >
+            </div>
+            <div
+                class="particle bg-mustard-yellow"
+                style="left: 60%; width: 5px; height: 5px; animation-duration: 21s; animation-delay: 5s; --drift: -30px; --particle-opacity: 0.3;"
+            >
+            </div>
+            <div
+                class="particle bg-soft-peach"
+                style="left: 35%; width: 4px; height: 4px; animation-duration: 17s; animation-delay: 9s; --drift: 60px; --particle-opacity: 0.4;"
+            >
+            </div>
+            <div
+                class="particle bg-border-color"
+                style="left: 80%; width: 3px; height: 3px; animation-duration: 23s; animation-delay: 7s; --drift: -70px; --particle-opacity: 0.15;"
+            >
+            </div>
+            <div
+                class="particle bg-terracotta"
+                style="left: 45%; width: 5px; height: 5px; animation-duration: 26s; animation-delay: 12s; --drift: 40px; --particle-opacity: 0.28;"
+            >
+            </div>
+            <div
+                class="particle bg-mustard-yellow"
+                style="left: 5%; width: 4px; height: 4px; animation-duration: 20s; animation-delay: 14s; --drift: -55px; --particle-opacity: 0.32;"
+            >
+            </div>
         </div>
-      </main>
-      <footer class="w-full mt-auto pt-12 relative z-10">
+
+        <!-- Grain overlay for texture -->
+        <div class="grain-overlay"></div>
         <div
-          class="bg-white p-6 shadow-sm border border-gray-100 rounded-sm max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 paper-card relative"
-          data-initial-rotation="-1"
-          style="transform-origin: center top;"
+            class="relative z-10 flex flex-col min-h-screen w-full p-4 md:p-12 max-w-7xl mx-auto"
         >
-          <div class="pin pin-soft-peach" style="top: -13px;"></div>
-          <div class="order-2 md:order-1 text-text-dark font-medium text-sm">
-            © 2026 Jon Colon. All rights reserved.
-          </div>
-          <div class="flex gap-6 order-1 md:order-2">
-            <a
-              class="text-text-light hover:text-terracotta transition-colors transform hover:scale-110 duration-200"
-              href="https://twitter.com/joncolon"
+            <header class="w-full flex justify-between items-center z-20 h-16">
+            </header>
+            <main
+                class="flex-grow grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center py-8"
             >
-              <span class="sr-only">X</span>
-              <svg
-                aria-hidden="true"
-                class="h-6 w-6"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-                ><path
-                  d="M13.6823 10.6218L20.2391 3H18.6854L12.9921 9.61788L8.44486 3H3.2002L10.0765 13.0074L3.2002 21H4.75404L10.7663 14.0113L15.5685 21H20.8131L13.6819 10.6218ZM11.5541 13.0956L10.8574 12.0991L5.31391 4.16971H7.70053L12.1742 10.5689L12.8709 11.5655L18.6861 19.8835H16.2995L11.5541 13.096V13.0956Z"
-                ></path></svg
-              >
-            </a>
-            <a
-              class="text-text-light hover:text-terracotta transition-colors transform hover:scale-110 duration-200"
-              href="https://www.linkedin.com/in/jonathen-colon-51956789/?trk=public-profile-join-page"
-            >
-              <span class="sr-only">LinkedIn</span>
-              <svg
-                aria-hidden="true"
-                class="h-6 w-6"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-                ><path
-                  clip-rule="evenodd"
-                  d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
-                  fill-rule="evenodd"></path></svg
-              >
-            </a>
-            <!-- <a
+                <div class="flex flex-col relative group">
+                    <div
+                        class="paper-card bg-white p-8 md:p-12 relative border border-gray-100"
+                        data-initial-rotation="-2"
+                    >
+                        <div class="pin pin-mustard" style="top: 15px;"></div>
+                        <div
+                            class="inline-block px-4 py-2 rounded-full bg-soft-peach/30 border border-terracotta/20 text-sm tracking-wide uppercase font-bold text-terracotta mb-6"
+                        >
+                            Portfolio
+                        </div>
+                        <h1
+                            class="text-5xl md:text-6xl lg:text-7xl font-quirky font-bold text-text-dark leading-[0.95] mb-8"
+                        >
+                            Something Bold <br class="hidden md:block" />
+                            <span class="relative inline-block">
+                                is Brewing.
+                                <svg
+                                    class="absolute w-full h-3 -bottom-1 left-0 text-mustard-yellow opacity-70"
+                                    preserveAspectRatio="none"
+                                    viewBox="0 0 100 10"
+                                >
+                                    <path
+                                        d="M0 5 Q 50 10 100 5"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="8"></path>
+                                </svg>
+                            </span>
+                        </h1>
+                        <p
+                            class="text-xl text-text-light font-medium leading-relaxed max-w-lg"
+                        >
+                            I'm currently building a new home for my work. A
+                            showcase of interaction design, branding, and
+                            creative direction. Be the first to see it!
+                        </p>
+                    </div>
+                </div>
+                <div
+                    class="flex flex-col relative mt-12 lg:mt-0 justify-self-center lg:justify-self-end w-full max-w-md"
+                >
+                    <div
+                        class="paper-card bg-white p-8 relative border-2 border-dashed border-gray-200"
+                        data-initial-rotation="3"
+                    >
+                        <div class="pin pin-terracotta" style="top: 15px;">
+                        </div>
+                        <div class="flex items-center gap-3 mb-6">
+                            <div
+                                class="p-2 bg-mustard-yellow/20 rounded-lg text-terracotta"
+                            >
+                                <span class="material-symbols-outlined"
+                                    >mail</span
+                                >
+                            </div>
+                            <h3
+                                class="font-quirky text-2xl font-bold text-text-dark"
+                            >
+                                Get Early Access
+                            </h3>
+                        </div>
+                        <form
+                            class="flex flex-col gap-4 w-full"
+                            id="subscribe-form"
+                        >
+                            <div class="relative group">
+                                <input
+                                    class="w-full h-14 px-4 bg-off-white-paper border-b-2 border-border-color focus:border-terracotta focus:ring-0 text-text-dark placeholder-text-light outline-none transition-colors rounded-t-md"
+                                    placeholder="Enter your email address..."
+                                    required=""
+                                    type="email"
+                                    name="email"
+                                    id="email-input"
+                                />
+                            </div>
+                            <button
+                                class="h-14 px-6 bg-terracotta hover:bg-terracotta/90 text-white font-quirky font-bold text-lg tracking-wide rounded-lg transition-all duration-300 transform hover:-translate-y-1 shadow-md shadow-terracotta/30 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                                type="submit"
+                                id="submit-btn"
+                            >
+                                <span id="btn-text">Get Notified</span>
+                                <span
+                                    class="material-symbols-outlined"
+                                    id="btn-icon">arrow_forward</span
+                                >
+                            </button>
+                            <p
+                                id="form-message"
+                                class="text-sm font-quirky text-center hidden"
+                            >
+                            </p>
+                        </form>
+                        <p
+                            class="mt-4 text-xs text-text-light text-center font-medium opacity-70 font-quirky"
+                        >
+                            No spam, just updates on the launch.
+                        </p>
+                        <div
+                            class="absolute -bottom-4 -left-4 w-16 h-16 bg-mustard-yellow rounded-full flex items-center justify-center text-white font-bold text-xs transform -rotate-12 shadow-lg z-20"
+                        >
+                            SOON!
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <footer class="w-full mt-auto pt-12 relative z-10">
+                <div
+                    class="bg-white p-6 shadow-sm border border-gray-100 rounded-sm max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 paper-card relative"
+                    data-initial-rotation="-1"
+                    style="transform-origin: center top;"
+                >
+                    <div class="pin pin-soft-peach" style="top: -13px;"></div>
+                    <div
+                        class="order-2 md:order-1 text-text-dark font-medium text-sm"
+                    >
+                        © 2026 Jon Colon. All rights reserved.
+                    </div>
+                    <div class="flex gap-6 order-1 md:order-2">
+                        <a
+                            class="text-text-light hover:text-terracotta transition-colors transform hover:scale-110 duration-200"
+                            href="https://twitter.com/joncolon"
+                        >
+                            <span class="sr-only">X</span>
+                            <svg
+                                aria-hidden="true"
+                                class="h-6 w-6"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                                ><path
+                                    d="M13.6823 10.6218L20.2391 3H18.6854L12.9921 9.61788L8.44486 3H3.2002L10.0765 13.0074L3.2002 21H4.75404L10.7663 14.0113L15.5685 21H20.8131L13.6819 10.6218ZM11.5541 13.0956L10.8574 12.0991L5.31391 4.16971H7.70053L12.1742 10.5689L12.8709 11.5655L18.6861 19.8835H16.2995L11.5541 13.096V13.0956Z"
+                                ></path></svg
+                            >
+                        </a>
+                        <a
+                            class="text-text-light hover:text-terracotta transition-colors transform hover:scale-110 duration-200"
+                            href="https://www.linkedin.com/in/jonathen-colon-51956789/?trk=public-profile-join-page"
+                        >
+                            <span class="sr-only">LinkedIn</span>
+                            <svg
+                                aria-hidden="true"
+                                class="h-6 w-6"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                                ><path
+                                    clip-rule="evenodd"
+                                    d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
+                                    fill-rule="evenodd"></path></svg
+                            >
+                        </a>
+                        <!-- <a
               class="text-text-light hover:text-terracotta transition-colors transform hover:scale-110 duration-200"
               href="#"
             >
@@ -433,154 +535,163 @@
                   fill-rule="evenodd"></path></svg
               >
             </a> -->
-          </div>
+                    </div>
+                </div>
+            </footer>
         </div>
-      </footer>
-    </div>
-    <script>
-      class Pendulum {
-        element: HTMLElement;
-        angle: number;
-        velocity: number;
-        acceleration: number;
-        initialAngle: number;
-        // Physics constants
-        gravity: number = 0.25; // Restoring force strength (Slightly stiffer)
-        friction: number = 0.96; // Damping factor (0-1)
-        mass: number = 1.6; // Higher mass = slower acceleration
+        <script>
+            class Pendulum {
+                element: HTMLElement;
+                angle: number;
+                velocity: number;
+                acceleration: number;
+                initialAngle: number;
+                // Physics constants
+                gravity: number = 0.25; // Restoring force strength (Slightly stiffer)
+                friction: number = 0.96; // Damping factor (0-1)
+                mass: number = 1.6; // Higher mass = slower acceleration
 
-        constructor(element: HTMLElement) {
-          this.element = element;
-          const initialRotation = parseFloat(
-            element.getAttribute("data-initial-rotation") || "0"
-          );
-          this.initialAngle = initialRotation;
-          this.angle = initialRotation;
-          this.velocity = 0;
-          this.acceleration = 0;
-        }
+                constructor(element: HTMLElement) {
+                    this.element = element;
+                    const initialRotation = parseFloat(
+                        element.getAttribute("data-initial-rotation") || "0",
+                    );
+                    this.initialAngle = initialRotation;
+                    this.angle = initialRotation;
+                    this.velocity = 0;
+                    this.acceleration = 0;
+                }
 
-        applyForce(force: number) {
-          this.acceleration += force / this.mass;
-        }
+                applyForce(force: number) {
+                    this.acceleration += force / this.mass;
+                }
 
-        update() {
-          // 1. Gravity (Restoring force towards initial angle)
-          // The further we are from rest, the stronger the pull back
-          const displacement = this.angle - this.initialAngle;
-          const restoringForce = -this.gravity * displacement;
-          this.applyForce(restoringForce);
+                update() {
+                    // 1. Gravity (Restoring force towards initial angle)
+                    // The further we are from rest, the stronger the pull back
+                    const displacement = this.angle - this.initialAngle;
+                    const restoringForce = -this.gravity * displacement;
+                    this.applyForce(restoringForce);
 
-          // 2. Physics integration
-          this.velocity += this.acceleration;
-          this.velocity *= this.friction; // Damping
-          this.angle += this.velocity;
+                    // 2. Physics integration
+                    this.velocity += this.acceleration;
+                    this.velocity *= this.friction; // Damping
+                    this.angle += this.velocity;
 
-          // Reset acceleration for next frame
-          this.acceleration = 0;
+                    // Reset acceleration for next frame
+                    this.acceleration = 0;
 
-          // 3. Render
-          this.element.style.transform = `rotate(${this.angle}deg)`;
-        }
-      }
-
-      // Initialize system
-      const cards = document.querySelectorAll(
-        ".paper-card"
-      ) as NodeListOf<HTMLElement>;
-      const pendulums = Array.from(cards).map((card) => new Pendulum(card));
-
-      // Main Loop
-      const loop = () => {
-        // Wind Physics
-        const time = Date.now() * 0.001; // Seconds
-        // Base wind: always swaying slightly
-        // Gusts: varied sine waves
-        // moderate strength for visible but gentle sway
-        const windStrength =
-          Math.sin(time) * 0.15 + // Slow base sway (was 0.05)
-          Math.sin(time * 2.5) * 0.05 + // Faster jitters (was 0.02)
-          Math.sin(time * 0.5) * 0.2; // Long gusts (was 0.1)
-
-        pendulums.forEach((p, index) => {
-          // Add phase offset based on index so they don't move in perfect unison
-          // Some cards might be "shielded" or react differently (random factor)
-          const phase = index * 2;
-          const localWind = windStrength + Math.sin(time + phase) * 0.05;
-
-          p.applyForce(localWind);
-          p.update();
-        });
-
-        requestAnimationFrame(loop);
-      };
-
-      // Start
-      loop();
-
-      // Form Handling
-      const form = document.getElementById("subscribe-form") as HTMLFormElement;
-      const emailInput = document.getElementById(
-        "email-input"
-      ) as HTMLInputElement;
-      const submitBtn = document.getElementById(
-        "submit-btn"
-      ) as HTMLButtonElement;
-      const btnText = document.getElementById("btn-text") as HTMLElement;
-      const btnIcon = document.getElementById("btn-icon") as HTMLElement;
-      const formMessage = document.getElementById(
-        "form-message"
-      ) as HTMLElement;
-
-      if (form) {
-        form.addEventListener("submit", async (e) => {
-          e.preventDefault();
-
-          const email = emailInput.value;
-          if (!email) return;
-
-          // Loading State
-          submitBtn.disabled = true;
-          const originalText = btnText.innerText;
-          btnText.innerText = "Joining...";
-
-          try {
-            const res = await fetch("/api/subscribe", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ email }),
-            });
-
-            const data = await res.json();
-
-            if (res.ok) {
-              // Success
-              formMessage.innerText = "You're on the list! Talk soon.";
-              formMessage.className =
-                "text-sm font-quirky text-center mt-2 text-terracotta font-bold block";
-              emailInput.value = "";
-              btnText.innerText = "Joined!";
-              btnIcon.innerText = "check";
-
-              setTimeout(() => {
-                submitBtn.disabled = false;
-                btnText.innerText = originalText;
-                btnIcon.innerText = "arrow_forward";
-                formMessage.classList.add("hidden");
-              }, 5000);
-            } else {
-              // Error
-              throw new Error(data.message || "Something went wrong");
+                    // 3. Render
+                    this.element.style.transform = `rotate(${this.angle}deg)`;
+                }
             }
-          } catch (err: any) {
-            formMessage.innerText = err.message || "Failed to join. Try again.";
-            formMessage.className =
-              "text-sm font-quirky text-center mt-2 text-red-500 block";
-            submitBtn.disabled = false;
-            btnText.innerText = originalText;
-          }
-        });
-      }
-    </script>
-  </body>
+
+            // Initialize system
+            const cards = document.querySelectorAll(
+                ".paper-card",
+            ) as NodeListOf<HTMLElement>;
+            const pendulums = Array.from(cards).map(
+                (card) => new Pendulum(card),
+            );
+
+            // Main Loop
+            const loop = () => {
+                // Wind Physics
+                const time = Date.now() * 0.001; // Seconds
+                // Base wind: always swaying slightly
+                // Gusts: varied sine waves
+                // moderate strength for visible but gentle sway
+                const windStrength =
+                    Math.sin(time) * 0.15 + // Slow base sway (was 0.05)
+                    Math.sin(time * 2.5) * 0.05 + // Faster jitters (was 0.02)
+                    Math.sin(time * 0.5) * 0.2; // Long gusts (was 0.1)
+
+                pendulums.forEach((p, index) => {
+                    // Add phase offset based on index so they don't move in perfect unison
+                    // Some cards might be "shielded" or react differently (random factor)
+                    const phase = index * 2;
+                    const localWind =
+                        windStrength + Math.sin(time + phase) * 0.05;
+
+                    p.applyForce(localWind);
+                    p.update();
+                });
+
+                requestAnimationFrame(loop);
+            };
+
+            // Start
+            loop();
+
+            // Form Handling
+            const form = document.getElementById(
+                "subscribe-form",
+            ) as HTMLFormElement;
+            const emailInput = document.getElementById(
+                "email-input",
+            ) as HTMLInputElement;
+            const submitBtn = document.getElementById(
+                "submit-btn",
+            ) as HTMLButtonElement;
+            const btnText = document.getElementById("btn-text") as HTMLElement;
+            const btnIcon = document.getElementById("btn-icon") as HTMLElement;
+            const formMessage = document.getElementById(
+                "form-message",
+            ) as HTMLElement;
+
+            if (form) {
+                form.addEventListener("submit", async (e) => {
+                    e.preventDefault();
+
+                    const email = emailInput.value;
+                    if (!email) return;
+
+                    // Loading State
+                    submitBtn.disabled = true;
+                    const originalText = btnText.innerText;
+                    btnText.innerText = "Joining...";
+
+                    try {
+                        const res = await fetch("/api/subscribe", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ email }),
+                        });
+
+                        const data = await res.json();
+
+                        if (res.ok) {
+                            // Success
+                            formMessage.innerText =
+                                "You're on the list! Talk soon.";
+                            formMessage.className =
+                                "text-sm font-quirky text-center mt-2 text-terracotta font-bold block";
+                            emailInput.value = "";
+                            btnText.innerText = "Joined!";
+                            btnIcon.innerText = "check";
+
+                            setTimeout(() => {
+                                submitBtn.disabled = false;
+                                btnText.innerText = originalText;
+                                btnIcon.innerText = "arrow_forward";
+                                formMessage.classList.add("hidden");
+                            }, 5000);
+                        } else {
+                            // Error
+                            throw new Error(
+                                data.message || "Something went wrong",
+                            );
+                        }
+                    } catch (err: any) {
+                        formMessage.innerText =
+                            err.message || "Failed to join. Try again.";
+                        formMessage.className =
+                            "text-sm font-quirky text-center mt-2 text-red-500 block";
+                        submitBtn.disabled = false;
+                        btnText.innerText = originalText;
+                    }
+                });
+            }
+        </script>
+    </body>
 </html>
