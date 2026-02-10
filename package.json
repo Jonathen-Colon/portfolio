@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "deploy": "npm exec wrangler deploy",
+    "deploy:dry": "npm exec wrangler deploy --dry-run",
     "preview": "astro preview",
     "astro": "astro"
   },
