@@ -1,0 +1,9 @@
+{
+  "name": "portfolio",
+  "compatibility_date": "2026-02-10",
+  "main": "dist/_worker.js/index.js",
+  "assets": {
+    "directory": "dist",
+    "binding": "ASSETS"
+  }
+}
