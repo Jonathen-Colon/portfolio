@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node -e \"require('node:fs').writeFileSync('dist/.assetsignore', '_worker.js\\n')\"",
     "deploy": "npm exec wrangler deploy",
     "deploy:dry": "npm exec wrangler deploy --dry-run",
     "preview": "astro preview",
