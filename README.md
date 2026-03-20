@@ -1,43 +1,115 @@
-# Astro Starter Kit: Minimal
+# Jon Colon Portfolio (Coming Soon)
 
-```sh
-npm create astro@latest -- --template minimal
-```
+An Astro + Tailwind landing page for `joncolon` with an email waitlist signup flow backed by **Cloudflare D1**, deployed on Cloudflare Workers.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Features
 
-## 🚀 Project Structure
+- Interactive "coming soon" page with custom animation and styling
+- Email waitlist form on the homepage
+- Server-side API route at `/api/subscribe`
+- **D1 (SQLite)** subscriber persistence via the `DB` binding
+- Cloudflare adapter + Wrangler config for deployment
 
-Inside of your Astro project, you'll see the following folders and files:
+## Tech Stack
+
+- [Astro](https://astro.build/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Cloudflare Workers](https://developers.cloudflare.com/workers/)
+- [Cloudflare D1](https://developers.cloudflare.com/d1/)
+
+## Project Structure
 
 ```text
-/
-├── public/
+.
+├── migrations/
+│   └── 0001_initial.sql        # D1 schema (optional; route also runs CREATE IF NOT EXISTS)
 ├── src/
+│   ├── env.d.ts                # TypeScript: Cloudflare `locals.runtime.env.DB`
 │   └── pages/
-│       └── index.astro
+│       ├── api/
+│       │   └── subscribe.ts    # Email signup endpoint (D1)
+│       └── index.astro         # Landing page UI + form script
+├── astro.config.mjs
+├── wrangler.jsonc              # Worker + D1 binding `DB`
 └── package.json
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Prerequisites
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+- Node.js 18+ (Node 20 recommended)
+- npm
+- A [Cloudflare](https://dash.cloudflare.com/) account
+- [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/install-and-update/) (also pulled in transitively via `npm`)
 
-Any static assets, like images, can be placed in the `public/` directory.
+## One-time: create D1 and wire `wrangler.jsonc`
 
-## 🧞 Commands
+1. Create a D1 database (pick a name you like; this repo expects `database_name` **`portfolio`** in `wrangler.jsonc`):
 
-All commands are run from the root of the project, from a terminal:
+   ```bash
+   npx wrangler d1 create portfolio
+   ```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+2. Copy the printed **`database_id`** into `wrangler.jsonc` under `d1_databases[0].database_id` (replace the placeholder).
 
-## 👀 Want to learn more?
+3. Apply migrations to your **remote** D1 (for production data):
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+   ```bash
+   npx wrangler d1 migrations apply portfolio --remote
+   ```
+
+For **local** development (SQLite file under Wrangler’s local state), apply migrations locally:
+
+```bash
+npx wrangler d1 migrations apply portfolio --local
+```
+
+> The subscribe route also runs `CREATE TABLE IF NOT EXISTS` so a fresh DB works even before migrations; the migration file is still the source of truth for schema reviews and production rollouts.
+
+## Local Development
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the dev server (uses `platformProxy` in `astro.config.mjs` so `wrangler.jsonc` bindings like **`DB`** are available):
+
+```bash
+npm run dev
+```
+
+Astro runs locally at [http://localhost:4321](http://localhost:4321).
+
+## Available Scripts
+
+- `npm run dev` - start local development server
+- `npm run build` - build production output to `dist/`
+- `npm run preview` - preview the production build locally
+- `npm run deploy:dry` - run a Wrangler dry-run deploy
+- `npm run deploy` - deploy to Cloudflare Workers
+
+## Deployment Notes
+
+- Astro is configured with `output: "server"` and the Cloudflare adapter in `astro.config.mjs`.
+- `wrangler.jsonc` points the Worker entrypoint to `dist/_worker.js/index.js` and binds D1 as **`DB`** (see `d1_databases`).
+- The build script also writes `dist/.assetsignore` so the Worker bundle is not treated as a static asset.
+- After changing D1 schema, use `wrangler d1 migrations create …` / `apply` as needed.
+
+## API Endpoint
+
+### `POST /api/subscribe`
+
+Accepts JSON:
+
+```json
+{ "email": "user@example.com" }
+```
+
+Behavior:
+
+- validates `Content-Type` as `application/json`
+- validates email format (basic `@` check)
+- ensures the `subscribers` table exists (`CREATE TABLE IF NOT EXISTS`)
+- prevents duplicate subscriptions by email
+- returns JSON success/error messages

@@ -10,11 +10,12 @@
     "preview": "astro preview",
     "astro": "astro"
   },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250317.0"
+  },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.12",
-    "@astrojs/node": "^9.5.1",
     "@astrojs/tailwind": "^6.0.2",
-    "@libsql/client": "^0.15.15",
     "@tailwindcss/container-queries": "^0.1.1",
     "@tailwindcss/forms": "^0.5.10",
     "astro": "^5.16.5",
