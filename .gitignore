@@ -29,3 +29,7 @@ pnpm-debug.log*
 
 # Convex local AI helper state (optional)
 convex/_generated/ai/
+
+.dev.vars*
+!.dev.vars.example
+!.env.example
