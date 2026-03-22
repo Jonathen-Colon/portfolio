@@ -1,0 +1,52 @@
+/* Shared “paper + pin” look (home + /admin) */
+.paper-card {
+  border-radius: 2px;
+  box-shadow:
+    2px 3px 10px rgba(0, 0, 0, 0.05),
+    10px 10px 0 rgba(0, 0, 0, 0.02);
+  transition: box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transform-origin: center 27px;
+  will-change: transform;
+}
+
+.paper-card:hover {
+  box-shadow:
+    4px 6px 15px rgba(0, 0, 0, 0.1),
+    12px 12px 0 rgba(0, 0, 0, 0.03);
+  z-index: 30;
+}
+
+.pin {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  box-shadow:
+    2px 4px 8px rgba(0, 0, 0, 0.25),
+    inset 2px 2px 5px rgba(255, 255, 255, 0.7),
+    inset -2px -2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.pin::after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 6px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  filter: blur(0.5px);
+}
+
+.pin-terracotta {
+  background: radial-gradient(circle at 40% 40%, #e68870, #d96c4e);
+  border: 1px solid #c25b3d;
+}

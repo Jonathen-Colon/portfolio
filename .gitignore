@@ -5,7 +5,6 @@ dist/
 
 # dependencies
 node_modules/
-.wrangler/
 
 # logs
 npm-debug.log*
@@ -16,6 +15,7 @@ pnpm-debug.log*
 
 # environment variables
 .env
+.env.local
 .env.production
 
 # macOS-specific files
@@ -23,3 +23,9 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# local tooling / cache
+.wrangler/
+
+# Convex local AI helper state (optional)
+convex/_generated/ai/

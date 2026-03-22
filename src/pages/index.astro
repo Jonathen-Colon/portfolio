@@ -1,3 +1,6 @@
+---
+import SubscribeIsland from "../components/SubscribeIsland";
+---
 <!doctype html>
 <html lang="en">
     <head>
@@ -431,37 +434,14 @@
                                 Get Early Access
                             </h3>
                         </div>
-                        <form
-                            class="flex flex-col gap-4 w-full"
-                            id="subscribe-form"
-                        >
-                            <div class="relative group">
-                                <input
-                                    class="w-full h-14 px-4 bg-off-white-paper border-b-2 border-border-color focus:border-terracotta focus:ring-0 text-text-dark placeholder-text-light outline-none transition-colors rounded-t-md"
-                                    placeholder="Enter your email address..."
-                                    required=""
-                                    type="email"
-                                    name="email"
-                                    id="email-input"
-                                />
-                            </div>
-                            <button
-                                class="h-14 px-6 bg-terracotta hover:bg-terracotta/90 text-white font-quirky font-bold text-lg tracking-wide rounded-lg transition-all duration-300 transform hover:-translate-y-1 shadow-md shadow-terracotta/30 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
-                                type="submit"
-                                id="submit-btn"
-                            >
-                                <span id="btn-text">Get Notified</span>
-                                <span
-                                    class="material-symbols-outlined"
-                                    id="btn-icon">arrow_forward</span
-                                >
-                            </button>
+                        <SubscribeIsland client:only="react">
                             <p
-                                id="form-message"
-                                class="text-sm font-quirky text-center hidden"
+                                slot="fallback"
+                                class="text-sm font-quirky text-center text-text-light py-2"
                             >
+                                Loading…
                             </p>
-                        </form>
+                        </SubscribeIsland>
                         <p
                             class="mt-4 text-xs text-text-light text-center font-medium opacity-70 font-quirky"
                         >
@@ -622,76 +602,6 @@
 
             // Start
             loop();
-
-            // Form Handling
-            const form = document.getElementById(
-                "subscribe-form",
-            ) as HTMLFormElement;
-            const emailInput = document.getElementById(
-                "email-input",
-            ) as HTMLInputElement;
-            const submitBtn = document.getElementById(
-                "submit-btn",
-            ) as HTMLButtonElement;
-            const btnText = document.getElementById("btn-text") as HTMLElement;
-            const btnIcon = document.getElementById("btn-icon") as HTMLElement;
-            const formMessage = document.getElementById(
-                "form-message",
-            ) as HTMLElement;
-
-            if (form) {
-                form.addEventListener("submit", async (e) => {
-                    e.preventDefault();
-
-                    const email = emailInput.value;
-                    if (!email) return;
-
-                    // Loading State
-                    submitBtn.disabled = true;
-                    const originalText = btnText.innerText;
-                    btnText.innerText = "Joining...";
-
-                    try {
-                        const res = await fetch("/api/subscribe", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ email }),
-                        });
-
-                        const data = await res.json();
-
-                        if (res.ok) {
-                            // Success
-                            formMessage.innerText =
-                                "You're on the list! Talk soon.";
-                            formMessage.className =
-                                "text-sm font-quirky text-center mt-2 text-terracotta font-bold block";
-                            emailInput.value = "";
-                            btnText.innerText = "Joined!";
-                            btnIcon.innerText = "check";
-
-                            setTimeout(() => {
-                                submitBtn.disabled = false;
-                                btnText.innerText = originalText;
-                                btnIcon.innerText = "arrow_forward";
-                                formMessage.classList.add("hidden");
-                            }, 5000);
-                        } else {
-                            // Error
-                            throw new Error(
-                                data.message || "Something went wrong",
-                            );
-                        }
-                    } catch (err: any) {
-                        formMessage.innerText =
-                            err.message || "Failed to join. Try again.";
-                        formMessage.className =
-                            "text-sm font-quirky text-center mt-2 text-red-500 block";
-                        submitBtn.disabled = false;
-                        btnText.innerText = originalText;
-                    }
-                });
-            }
         </script>
     </body>
 </html>
