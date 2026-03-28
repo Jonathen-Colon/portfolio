@@ -146,7 +146,7 @@ function AdminSignIn() {
       <h1 className="font-quirky text-2xl font-bold text-text-dark mb-2">
         Admin
       </h1>
-      <p className="text-text-light text-sm mb-6">
+      {/* <p className="text-text-light text-sm mb-6">
         Sign in with the admin email set in Convex as{" "}
         <code className="text-xs bg-off-white-paper px-1 rounded">ADMIN_EMAIL</code>
         . First visit: choose{" "}
@@ -156,7 +156,7 @@ function AdminSignIn() {
           npm run convex:setup-auth-env
         </code>{" "}
         for JWT keys + a variable checklist.
-      </p>
+      </p> */}
       <form
         className="flex flex-col gap-3"
         onSubmit={(e) => {
