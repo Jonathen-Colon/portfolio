@@ -1,2 +1,6 @@
-// Add schema types here as they are created
-export const schemaTypes: unknown[] = []
+import { projectSchema } from './project'
+import { postSchema } from './post'
+import { nowItemSchema } from './nowItem'
+import { resumeRowSchema, resumeSchema } from './resumeEntry'
+
+export const schemaTypes = [projectSchema, postSchema, nowItemSchema, resumeRowSchema, resumeSchema]

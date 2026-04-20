@@ -421,7 +421,6 @@ function WorkCard({ project, onClick, i }: { project: Project; onClick: () => vo
 }
 
 function WorkPage({ go, openProject, kind, projects }: { go: (id: string) => void; openProject: (p: Project) => void; kind: 'web' | 'games'; projects: Project[] }) {
-  const data = projects;
   const title = kind === 'web' ? 'Web design' : 'Game dev';
   const num = kind === 'web' ? '02' : '03';
   const sub = kind === 'web'
@@ -437,12 +436,12 @@ function WorkPage({ go, openProject, kind, projects }: { go: (id: string) => voi
             <p style={{ maxWidth: 540, color: 'var(--ink-soft)', margin: '14px 0 0' }}>{sub}</p>
           </div>
           <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-            <span className="pill">{data.length} projects</span>
+            <span className="pill">{projects.length} projects</span>
             <button className="nav-link" onClick={() => go(kind === 'web' ? 'games' : 'web')}>→ see {kind === 'web' ? 'games' : 'web'}</button>
           </div>
         </div>
         <div className="work-grid">
-          {data.map((p, i) => <WorkCard key={p.id} project={p} onClick={() => openProject(p)} i={i} />)}
+          {projects.map((p, i) => <WorkCard key={p.id} project={p} onClick={() => openProject(p)} i={i} />)}
         </div>
       </div>
     </section>
@@ -922,6 +921,29 @@ export default function PortfolioApp() {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
 
+  const [webProjects, setWebProjects] = useState<Project[]>([]);
+  const [gameProjects, setGameProjects] = useState<Project[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [nowItems, setNowItems] = useState<NowItem[]>([]);
+  const [resume, setResume] = useState<Resume | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.all([
+      sanityClient.fetch('*[_type == "project" && kind == "web"] | order(_createdAt asc)'),
+      sanityClient.fetch('*[_type == "project" && kind == "game"] | order(_createdAt asc)'),
+      sanityClient.fetch('*[_type == "post"] | order(date desc)'),
+      sanityClient.fetch('*[_type == "nowItem"]'),
+      sanityClient.fetch('*[_type == "resume"][0]'),
+    ]).then(([web, game, ps, now, res]) => {
+      setWebProjects(web ?? []);
+      setGameProjects(game ?? []);
+      setPosts(ps ?? []);
+      setNowItems(now ?? []);
+      setResume(res ?? null);
+    }).finally(() => setLoading(false));
+  }, []);
+
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     try { localStorage.setItem('jc-theme', theme); } catch { }
@@ -960,6 +982,14 @@ export default function PortfolioApp() {
     raf = requestAnimationFrame(tick);
     return () => { window.removeEventListener('mousemove', mm); cancelAnimationFrame(raf); };
   }, []);
+
+  if (loading) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <span className="font-mono" style={{ color: 'var(--muted)', fontSize: 13, letterSpacing: '0.08em' }}>Loading...</span>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -1000,18 +1030,18 @@ export default function PortfolioApp() {
         <div className="page" key="home">
           <Hero go={go} />
           <MarqueeStrip />
-          <FeaturedWork openProject={setModalProject} go={go} />
-          <HomeBlogTeaser openPost={setModalPost} go={go} />
+          <FeaturedWork openProject={setModalProject} go={go} webProjects={webProjects} gameProjects={gameProjects} />
+          <HomeBlogTeaser openPost={setModalPost} go={go} posts={posts} />
           <HomeCTA go={go} />
         </div>
       )}
-      {page === 'web' && <div key="web"><WorkPage kind="web" go={go} openProject={setModalProject} /></div>}
-      {page === 'games' && <div key="games"><WorkPage kind="games" go={go} openProject={setModalProject} /></div>}
-      {page === 'blog' && <div key="blog"><BlogPage openPost={setModalPost} /></div>}
+      {page === 'web' && <div key="web"><WorkPage kind="web" go={go} openProject={setModalProject} projects={webProjects} /></div>}
+      {page === 'games' && <div key="games"><WorkPage kind="games" go={go} openProject={setModalProject} projects={gameProjects} /></div>}
+      {page === 'blog' && <div key="blog"><BlogPage openPost={setModalPost} posts={posts} /></div>}
       {page === 'about' && <div key="about"><AboutPage /></div>}
-      {page === 'now' && <div key="now"><NowPage /></div>}
+      {page === 'now' && <div key="now"><NowPage nowItems={nowItems} /></div>}
       {page === 'contact' && <div key="contact"><ContactPage /></div>}
-      {page === 'resume' && <div key="resume"><ResumePage /></div>}
+      {page === 'resume' && <div key="resume"><ResumePage resume={resume} /></div>}
 
       <Footer go={go} />
 
