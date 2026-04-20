@@ -1,607 +1,437 @@
 ---
-import SubscribeIsland from "../components/SubscribeIsland";
+import PortfolioApp from "../components/PortfolioApp";
 ---
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-        <link rel="icon" type="image/png" href="/icon.png" />
-        <title>Coming Soon - Jon Colon</title>
-        <link href="https://fonts.googleapis.com" rel="preconnect" />
-        <link
-            crossorigin=""
-            href="https://fonts.gstatic.com"
-            rel="preconnect"
-        />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap"
-            rel="stylesheet"
-        />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-            rel="stylesheet"
-        />
-        <style is:global>
-            body {
-                background-color: #f9f7f1;
-                background-image:
-                    url("https://lh3.googleusercontent.com/aida-public/AB6AXuB5E9o7bP55jsDjBP8iXTH4VnObs_inbB4LVi8in_pfz6giHQQL0mHRdDPsevz-CXvBMjOJ1OgSkixHHNWABEBOYZ2RrKXrhq4xh83ECQAk81j-r6s7R-YoZL5ndVWAqRGe6K6OvEtiM0q88CXAOb4iDav4pFbrx9TTRQend6ARn_10v-o6sYgw2RKqN7KeWrvGrdVDSRVq5ndRKdez8jfaNHYT86Wd-8ivKzy2UalqSeU2nc06yGioP9URI7wzh5T6oUPrxBaiRb4"),
-                    url("https://www.transparenttextures.com/patterns/notebook.png");
-                background-blend-mode: overlay, multiply;
-                background-size: cover, auto;
-            }
-            .paper-card {
-                border-radius: 2px;
-                box-shadow:
-                    2px 3px 10px rgba(0, 0, 0, 0.05),
-                    10px 10px 0 rgba(0, 0, 0, 0.02);
-                transition: box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-                transform-origin: center 27px; /* Approximate pin position */
-                will-change: transform;
-            }
-            .paper-card:hover {
-                /* transform: scale(1.01) rotate(0deg) !important; removed to let JS handle transform */
-                box-shadow:
-                    4px 6px 15px rgba(0, 0, 0, 0.1),
-                    12px 12px 0 rgba(0, 0, 0, 0.03);
-                z-index: 30;
-            }
-            .pin {
-                width: 24px;
-                height: 24px;
-                border-radius: 50%;
-                position: absolute;
-                left: 50%;
-                transform: translateX(-50%);
-                z-index: 40;
-                box-shadow:
-                    2px 4px 8px rgba(0, 0, 0, 0.25),
-                    inset 2px 2px 5px rgba(255, 255, 255, 0.7),
-                    inset -2px -2px 6px rgba(0, 0, 0, 0.1);
-            }
-            .pin::after {
-                content: "";
-                position: absolute;
-                top: 5px;
-                left: 6px;
-                width: 8px;
-                height: 8px;
-                border-radius: 50%;
-                background: linear-gradient(
-                    135deg,
-                    rgba(255, 255, 255, 0.95) 0%,
-                    rgba(255, 255, 255, 0.1) 100%
-                );
-                filter: blur(0.5px);
-            }
-            .pin-terracotta {
-                background-color: #d96c4e;
-                background: radial-gradient(
-                    circle at 40% 40%,
-                    #e68870,
-                    #d96c4e
-                );
-                border: 1px solid #c25b3d;
-            }
-            .pin-mustard {
-                background-color: #f4c47b;
-                background: radial-gradient(
-                    circle at 40% 40%,
-                    #fce0b0,
-                    #f4c47b
-                );
-                border: 1px solid #dea652;
-            }
-            .pin-soft-peach {
-                background-color: #fadadd;
-                background: radial-gradient(
-                    circle at 40% 40%,
-                    #fff0f3,
-                    #fadadd
-                );
-                border: 1px solid #e3c1c4;
-            }
-            @keyframes float {
-                0% {
-                    transform: translate(0, 0) rotate(0deg);
-                }
-                33% {
-                    transform: translate(10px, -15px) rotate(2deg);
-                }
-                66% {
-                    transform: translate(-5px, 10px) rotate(-1deg);
-                }
-                100% {
-                    transform: translate(0, 0) rotate(0deg);
-                }
-            }
-            .animate-blob {
-                animation: float 12s infinite ease-in-out;
-            }
-            @keyframes wind-drift {
-                0% {
-                    transform: translateX(-100%) translateY(10px) rotate(-5deg);
-                    opacity: 0;
-                }
-                10% {
-                    opacity: 0.8;
-                }
-                90% {
-                    opacity: 0.8;
-                }
-                100% {
-                    transform: translateX(100vw) translateY(-10px) rotate(5deg);
-                    opacity: 0;
-                }
-            }
-            .wind-gust {
-                position: absolute;
-                pointer-events: none;
-                opacity: 0;
-                z-index: 0;
-                color: #ccc5b9; /* Border color used as subtle wind color */
-                stroke: currentColor;
-            }
-            .wind-gust::before {
-                content: "";
-                position: absolute;
-                inset: 0;
-                border-radius: 50%;
-                opacity: 0;
-                animation: wind-gust 10s infinite ease-in-out;
-            }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/icon.png" />
+    <title>Jon Colon — Designer, Developer, Game Dev</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+    <style is:global>
+:root {
+  --bg: #F4EFE6;
+  --bg-alt: #EAE3D4;
+  --ink: #141414;
+  --ink-soft: #2A2A2A;
+  --muted: #6B6658;
+  --line: #141414;
+  --red: #FF3B1F;
+  --lime: #C8FF4D;
+  --cobalt: #2E4BFF;
+  --plum: #6B2BFF;
+  --sun: #FFC83D;
+  --mint: #4DE0B2;
+  --shadow: 6px 6px 0 var(--ink);
+  --shadow-lg: 10px 10px 0 var(--ink);
+  --shadow-sm: 3px 3px 0 var(--ink);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --t-fast: 160ms cubic-bezier(.2,.8,.2,1);
+  --t: 260ms cubic-bezier(.2,.8,.2,1);
+  --t-slow: 500ms cubic-bezier(.2,.8,.2,1);
+  --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-body: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
 
-            @keyframes wind-gust {
-                0% {
-                    transform: translateX(-100%) translateY(10px) rotate(-5deg);
-                    opacity: 0;
-                }
-                10% {
-                    opacity: 0.8;
-                }
-                90% {
-                    opacity: 0.8;
-                }
-                100% {
-                    transform: translateX(100vw) translateY(-10px) rotate(5deg);
-                    opacity: 0;
-                }
-            }
-            /* Floating particles */
-            .particle {
-                position: absolute;
-                border-radius: 50%;
-                pointer-events: none;
-                opacity: 0;
-                animation: particle-float linear infinite;
-            }
+[data-theme="dark"] {
+  --bg: #0E0E0F;
+  --bg-alt: #18181A;
+  --ink: #F4EFE6;
+  --ink-soft: #D6D0C2;
+  --muted: #8F8A7F;
+  --line: #F4EFE6;
+  --red: #FF5538;
+  --lime: #D8FF5D;
+  --cobalt: #5A73FF;
+  --plum: #8A54FF;
+  --sun: #FFD45A;
+  --mint: #5EECC1;
+  --shadow: 6px 6px 0 var(--line);
+  --shadow-lg: 10px 10px 0 var(--line);
+  --shadow-sm: 3px 3px 0 var(--line);
+}
 
-            @keyframes particle-float {
-                0% {
-                    transform: translateY(100vh) translateX(0) rotate(0deg);
-                    opacity: 0;
-                }
-                5% {
-                    opacity: var(--particle-opacity, 0.4);
-                }
-                95% {
-                    opacity: var(--particle-opacity, 0.4);
-                }
-                100% {
-                    transform: translateY(-20vh) translateX(var(--drift, 50px))
-                        rotate(360deg);
-                    opacity: 0;
-                }
-            }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  transition: background var(--t), color var(--t);
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
 
-            /* Subtle grain overlay for texture */
-            .grain-overlay {
-                position: fixed;
-                inset: 0;
-                pointer-events: none;
-                opacity: 0.03;
-                z-index: 100;
-                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            }
-        </style>
-    </head>
-    <body
-        class="bg-off-white-paper font-sans text-text-dark min-h-screen relative overflow-x-hidden selection:bg-terracotta selection:text-white"
-    >
-        <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-            <svg
-                class="absolute top-10 left-10 w-48 h-48 text-terracotta opacity-20 animate-blob"
-                style="animation-duration: 15s;"
-                viewBox="0 0 200 200"
-            >
-                <path
-                    d="M45.7,-51.3C57.3,-39.8,63.4,-23.4,62.1,-7.8C60.8,7.8,52.1,22.6,41.9,35.3C31.7,48,20.1,58.6,4.7,63.3C-10.7,68,-29.9,66.8,-43.3,56.7C-56.7,46.6,-64.3,27.5,-65.8,8.2C-67.3,-11.1,-62.7,-30.6,-50.7,-42.6C-38.6,-54.6,-19.3,-59.1,-1.2,-57.7C16.9,-56.3,34.1,-62.8,45.7,-51.3Z"
-                    fill="currentColor"
-                    transform="translate(100 100)"></path>
-            </svg>
-            <svg
-                class="absolute bottom-20 right-10 w-64 h-64 text-mustard-yellow opacity-30 animate-blob"
-                style="animation-delay: 2s; animation-duration: 18s;"
-                viewBox="0 0 200 200"
-            >
-                <path
-                    d="M41.3,-49.8C54.4,-38.3,66.4,-26.4,70.1,-12.3C73.8,1.8,69.2,18.1,59.3,31.7C49.4,45.3,34.1,56.2,18,60.9C1.9,65.6,-15.1,64.1,-30.2,56.4C-45.3,48.7,-58.5,34.8,-63.9,18.7C-69.3,2.6,-66.9,-15.7,-57.1,-29.9C-47.3,-44.1,-30.1,-54.2,-13.6,-56.8C2.9,-59.4,28.2,-61.3,41.3,-49.8Z"
-                    fill="currentColor"
-                    transform="translate(100 100)"></path>
-            </svg>
-            <svg
-                class="absolute top-1/3 right-1/4 w-32 h-32 text-soft-peach opacity-60 animate-blob"
-                style="animation-delay: 4s;"
-                viewBox="0 0 200 200"
-            >
-                <circle cx="100" cy="100" fill="currentColor" r="80"></circle>
-            </svg>
-            <svg
-                class="absolute bottom-1/4 left-20 w-40 h-40 text-text-dark opacity-10"
-                fill="none"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-width="3"
-                viewBox="0 0 100 100"
-            >
-                <path d="M10,50 Q25,25 40,50 T70,50 T100,50"></path>
-            </svg>
-            <div
-                class="absolute top-24 right-24 text-terracotta opacity-40 text-4xl font-quirky rotate-12"
-            >
-                +
-            </div>
-            <div
-                class="absolute bottom-32 left-1/2 text-mustard-yellow opacity-60 text-5xl font-quirky -rotate-12"
-            >
-                +
-            </div>
+.display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 0.92;
+  font-optical-sizing: auto;
+}
+.mono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
 
-            <!-- Wind SVGs -->
-            <svg
-                class="wind-gust w-64 h-24 top-1/4 left-0"
-                style="animation: wind-drift 8s linear infinite; animation-delay: 0s;"
-                viewBox="0 0 200 100"
-            >
-                <path
-                    d="M10,50 Q50,20 90,50 T170,50"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="3"
-                    stroke-dasharray="10 5"
-                    opacity="0.8"></path>
-            </svg>
-            <svg
-                class="wind-gust w-96 h-32 top-1/2 left-0"
-                style="animation: wind-drift 12s linear infinite; animation-delay: 4s;"
-                viewBox="0 0 300 100"
-            >
-                <path
-                    d="M10,50 Q80,80 150,50 T290,50"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.5"
-                    stroke-dasharray="15 10"
-                    opacity="0.6"></path>
-            </svg>
-            <svg
-                class="wind-gust w-48 h-16 bottom-1/3 left-0"
-                style="animation: wind-drift 10s linear infinite; animation-delay: 2s;"
-                viewBox="0 0 200 50"
-            >
-                <path
-                    d="M10,25 Q50,5 90,25 T170,25"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-dasharray="5 5"
-                    opacity="0.7"></path>
-            </svg>
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 28px; }
+.section { padding: 96px 0; position: relative; }
+.section-tight { padding: 56px 0; }
 
-            <!-- Floating particles -->
-            <div
-                class="particle bg-terracotta"
-                style="left: 10%; width: 6px; height: 6px; animation-duration: 18s; animation-delay: 0s; --drift: 80px; --particle-opacity: 0.3;"
-            >
-            </div>
-            <div
-                class="particle bg-mustard-yellow"
-                style="left: 25%; width: 8px; height: 8px; animation-duration: 22s; animation-delay: 3s; --drift: -60px; --particle-opacity: 0.4;"
-            >
-            </div>
-            <div
-                class="particle bg-soft-peach"
-                style="left: 40%; width: 5px; height: 5px; animation-duration: 16s; animation-delay: 6s; --drift: 100px; --particle-opacity: 0.5;"
-            >
-            </div>
-            <div
-                class="particle bg-terracotta"
-                style="left: 55%; width: 4px; height: 4px; animation-duration: 20s; animation-delay: 2s; --drift: -40px; --particle-opacity: 0.25;"
-            >
-            </div>
-            <div
-                class="particle bg-mustard-yellow"
-                style="left: 70%; width: 7px; height: 7px; animation-duration: 24s; animation-delay: 8s; --drift: 70px; --particle-opacity: 0.35;"
-            >
-            </div>
-            <div
-                class="particle bg-soft-peach"
-                style="left: 85%; width: 6px; height: 6px; animation-duration: 19s; animation-delay: 4s; --drift: -90px; --particle-opacity: 0.45;"
-            >
-            </div>
-            <div
-                class="particle bg-terracotta"
-                style="left: 15%; width: 3px; height: 3px; animation-duration: 15s; animation-delay: 10s; --drift: 50px; --particle-opacity: 0.2;"
-            >
-            </div>
-            <div
-                class="particle bg-mustard-yellow"
-                style="left: 60%; width: 5px; height: 5px; animation-duration: 21s; animation-delay: 5s; --drift: -30px; --particle-opacity: 0.3;"
-            >
-            </div>
-            <div
-                class="particle bg-soft-peach"
-                style="left: 35%; width: 4px; height: 4px; animation-duration: 17s; animation-delay: 9s; --drift: 60px; --particle-opacity: 0.4;"
-            >
-            </div>
-            <div
-                class="particle bg-border-color"
-                style="left: 80%; width: 3px; height: 3px; animation-duration: 23s; animation-delay: 7s; --drift: -70px; --particle-opacity: 0.15;"
-            >
-            </div>
-            <div
-                class="particle bg-terracotta"
-                style="left: 45%; width: 5px; height: 5px; animation-duration: 26s; animation-delay: 12s; --drift: 40px; --particle-opacity: 0.28;"
-            >
-            </div>
-            <div
-                class="particle bg-mustard-yellow"
-                style="left: 5%; width: 4px; height: 4px; animation-duration: 20s; animation-delay: 14s; --drift: -55px; --particle-opacity: 0.32;"
-            >
-            </div>
-        </div>
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--bg);
+  border-bottom: 2px solid var(--line);
+  backdrop-filter: saturate(1.2);
+}
+.nav-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 28px; max-width: 1240px; margin: 0 auto;
+}
+.logo {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--font-display); font-weight: 800; font-size: 22px; letter-spacing: -0.02em;
+}
+.logo-badge {
+  width: 34px; height: 34px;
+  border: 2px solid var(--line); background: var(--red); color: #fff;
+  border-radius: 10px; display: grid; place-items: center; font-size: 18px;
+  box-shadow: var(--shadow-sm); transition: transform var(--t);
+}
+.logo:hover .logo-badge { transform: rotate(-8deg) scale(1.05); }
+.nav-links { display: flex; gap: 4px; align-items: center; }
+.nav-link {
+  padding: 8px 14px; border-radius: 999px; font-weight: 500; font-size: 15px;
+  border: 2px solid transparent; transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast);
+  cursor: pointer; background: none; color: var(--ink);
+}
+.nav-link:hover { background: var(--bg-alt); border-color: var(--line); }
+.nav-link.active { background: var(--ink); color: var(--bg); border-color: var(--line); }
+.theme-toggle {
+  width: 42px; height: 42px; border: 2px solid var(--line); background: var(--bg);
+  border-radius: 999px; display: grid; place-items: center; font-size: 18px;
+  box-shadow: var(--shadow-sm); transition: transform var(--t-fast);
+}
+.theme-toggle:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--line); }
+.theme-toggle:active { transform: translate(0,0); box-shadow: 1px 1px 0 var(--line); }
 
-        <!-- Grain overlay for texture -->
-        <div class="grain-overlay"></div>
-        <div
-            class="relative z-10 flex flex-col min-h-screen w-full p-4 md:p-12 max-w-7xl mx-auto"
-        >
-            <header class="w-full flex justify-between items-center z-20 h-16">
-            </header>
-            <main
-                class="flex-grow grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center py-8"
-            >
-                <div class="flex flex-col relative group">
-                    <div
-                        class="paper-card bg-white p-8 md:p-12 relative border border-gray-100"
-                        data-initial-rotation="-2"
-                    >
-                        <div class="pin pin-mustard" style="top: 15px;"></div>
-                        <div
-                            class="inline-block px-4 py-2 rounded-full bg-soft-peach/30 border border-terracotta/20 text-sm tracking-wide uppercase font-bold text-terracotta mb-6"
-                        >
-                            Portfolio!
-                        </div>
-                        <h1
-                            class="text-5xl md:text-6xl lg:text-7xl font-quirky font-bold text-text-dark leading-[0.95] mb-8"
-                        >
-                            Something Bold <br class="hidden md:block" />
-                            <span class="relative inline-block">
-                                is Brewing.
-                                <svg
-                                    class="absolute w-full h-3 -bottom-1 left-0 text-mustard-yellow opacity-70"
-                                    preserveAspectRatio="none"
-                                    viewBox="0 0 100 10"
-                                >
-                                    <path
-                                        d="M0 5 Q 50 10 100 5"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="8"></path>
-                                </svg>
-                            </span>
-                        </h1>
-                        <p
-                            class="text-xl text-text-light font-medium leading-relaxed max-w-lg"
-                        >
-                            I'm currently building a new home for my work. A
-                            showcase of interaction design, branding, and
-                            creative direction. Be the first to see it!
-                        </p>
-                    </div>
-                </div>
-                <div
-                    class="flex flex-col relative mt-12 lg:mt-0 justify-self-center lg:justify-self-end w-full max-w-md"
-                >
-                    <div
-                        class="paper-card bg-white p-8 relative border-2 border-dashed border-gray-200"
-                        data-initial-rotation="3"
-                    >
-                        <div class="pin pin-terracotta" style="top: 15px;">
-                        </div>
-                        <div class="flex items-center gap-3 mb-6">
-                            <div
-                                class="p-2 bg-mustard-yellow/20 rounded-lg text-terracotta"
-                            >
-                                <span class="material-symbols-outlined"
-                                    >mail</span
-                                >
-                            </div>
-                            <h3
-                                class="font-quirky text-2xl font-bold text-text-dark"
-                            >
-                                Get Early Access
-                            </h3>
-                        </div>
-                        <SubscribeIsland client:only="react">
-                            <p
-                                slot="fallback"
-                                class="text-sm font-quirky text-center text-text-light py-2"
-                            >
-                                Loading…
-                            </p>
-                        </SubscribeIsland>
-                        <p
-                            class="mt-4 text-xs text-text-light text-center font-medium opacity-70 font-quirky"
-                        >
-                            No spam, just updates on the launch.
-                        </p>
-                        <div
-                            class="absolute -bottom-4 -left-4 w-16 h-16 bg-mustard-yellow rounded-full flex items-center justify-center text-white font-bold text-xs transform -rotate-12 shadow-lg z-20"
-                        >
-                            SOON!
-                        </div>
-                    </div>
-                </div>
-            </main>
-            <footer class="w-full mt-auto pt-12 relative z-10">
-                <div
-                    class="bg-white p-6 shadow-sm border border-gray-100 rounded-sm max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 paper-card relative"
-                    data-initial-rotation="-1"
-                    style="transform-origin: center top;"
-                >
-                    <div class="pin pin-soft-peach" style="top: -13px;"></div>
-                    <div
-                        class="order-2 md:order-1 text-text-dark font-medium text-sm"
-                    >
-                        © 2026 Jon Colon. All rights reserved.
-                    </div>
-                    <div class="flex gap-6 order-1 md:order-2">
-                        <a
-                            class="text-text-light hover:text-terracotta transition-colors transform hover:scale-110 duration-200"
-                            href="https://twitter.com/joncolon"
-                        >
-                            <span class="sr-only">X</span>
-                            <svg
-                                aria-hidden="true"
-                                class="h-6 w-6"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                                ><path
-                                    d="M13.6823 10.6218L20.2391 3H18.6854L12.9921 9.61788L8.44486 3H3.2002L10.0765 13.0074L3.2002 21H4.75404L10.7663 14.0113L15.5685 21H20.8131L13.6819 10.6218ZM11.5541 13.0956L10.8574 12.0991L5.31391 4.16971H7.70053L12.1742 10.5689L12.8709 11.5655L18.6861 19.8835H16.2995L11.5541 13.096V13.0956Z"
-                                ></path></svg
-                            >
-                        </a>
-                        <a
-                            class="text-text-light hover:text-terracotta transition-colors transform hover:scale-110 duration-200"
-                            href="https://www.linkedin.com/in/jonathen-colon-51956789/?trk=public-profile-join-page"
-                        >
-                            <span class="sr-only">LinkedIn</span>
-                            <svg
-                                aria-hidden="true"
-                                class="h-6 w-6"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                                ><path
-                                    clip-rule="evenodd"
-                                    d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
-                                    fill-rule="evenodd"></path></svg
-                            >
-                        </a>
-                        <!-- <a
-              class="text-text-light hover:text-terracotta transition-colors transform hover:scale-110 duration-200"
-              href="#"
-            >
-              <span class="sr-only">Dribbble</span>
-              <svg
-                aria-hidden="true"
-                class="h-6 w-6"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-                ><path
-                  clip-rule="evenodd"
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c5.51 0 10-4.48 10-10S17.51 2 12 2zm6.605 4.61a8.502 8.502 0 011.93 5.314c-.281-.054-3.101-.629-5.943-.271-.065-.141-.12-.493-.184-.845a27.14 27.14 0 00-6.155-2.319 8.533 8.533 0 0110.352-1.88zm-5.714.708a26.315 26.315 0 015.424 2.146c-2.793 2.894-6.666 3.256-8.52 3.064-.047-.13-.082-.413-.118-.76-.057-.557-.087-1.127-.087-1.71 0-1.02.088-2.008.252-2.964.918.065 1.956.124 3.05.224zm-4.34 1.137c-.122.842-.187 1.724-.187 2.636 0 .432.015.856.044 1.274-2.618.36-6.198.058-7.796-.192a8.533 8.533 0 017.94-3.718zm-8.243 5.738c1.78.225 5.512.446 8.232.073.345 1.638.79 3.06 1.305 4.228-2.923 1.05-6.505.748-7.728.536a8.505 8.505 0 01-1.809-4.837zm10.73 6.012c-.56-1.258-1.036-2.784-1.396-4.526 2.05-.125 5.922-.647 8.61 2.302a8.532 8.532 0 01-7.214 2.224zm8.687-3.669c-2.585-2.58-6.075-2.257-8.083-2.152.285-1.554.49-3.054.606-4.49 3.055-.422 6.326.234 6.77.307a8.5 8.5 0 01.707 6.335z"
-                  fill-rule="evenodd"></path></svg
-              >
-            </a> -->
-                    </div>
-                </div>
-            </footer>
-        </div>
-        <script>
-            class Pendulum {
-                element: HTMLElement;
-                angle: number;
-                velocity: number;
-                acceleration: number;
-                initialAngle: number;
-                // Physics constants
-                gravity: number = 0.25; // Restoring force strength (Slightly stiffer)
-                friction: number = 0.96; // Damping factor (0-1)
-                mass: number = 1.6; // Higher mass = slower acceleration
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 22px; border: 2px solid var(--line); border-radius: 999px;
+  background: var(--ink); color: var(--bg); font-weight: 600; font-size: 16px;
+  box-shadow: var(--shadow); transition: transform var(--t-fast), box-shadow var(--t-fast);
+}
+.btn:hover { transform: translate(-2px, -2px); box-shadow: 9px 9px 0 var(--line); }
+.btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--line); }
+.btn-alt { background: var(--red); color: #fff; }
+.btn-lime { background: var(--lime); color: var(--ink); }
+.btn-ghost { background: var(--bg); color: var(--ink); }
 
-                constructor(element: HTMLElement) {
-                    this.element = element;
-                    const initialRotation = parseFloat(
-                        element.getAttribute("data-initial-rotation") || "0",
-                    );
-                    this.initialAngle = initialRotation;
-                    this.angle = initialRotation;
-                    this.velocity = 0;
-                    this.acceleration = 0;
-                }
+.pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 11px; border: 2px solid var(--line); border-radius: 999px;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
+  text-transform: uppercase; background: var(--bg);
+}
+.pill.red { background: var(--red); color: #fff; }
+.pill.lime { background: var(--lime); color: var(--ink); }
+.pill.cobalt { background: var(--cobalt); color: #fff; }
+.pill.plum { background: var(--plum); color: #fff; }
+.pill.sun { background: var(--sun); color: var(--ink); }
+.pill.mint { background: var(--mint); color: var(--ink); }
 
-                applyForce(force: number) {
-                    this.acceleration += force / this.mass;
-                }
+.card {
+  border: 2px solid var(--line); border-radius: var(--radius); background: var(--bg);
+  box-shadow: var(--shadow); transition: transform var(--t), box-shadow var(--t);
+  overflow: hidden; position: relative;
+}
+.card:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--line); }
+.card.flat { box-shadow: none; }
+.card.flat:hover { transform: none; box-shadow: none; }
 
-                update() {
-                    // 1. Gravity (Restoring force towards initial angle)
-                    // The further we are from rest, the stronger the pull back
-                    const displacement = this.angle - this.initialAngle;
-                    const restoringForce = -this.gravity * displacement;
-                    this.applyForce(restoringForce);
+.page { animation: pageIn 400ms cubic-bezier(.2,.8,.2,1) both; }
+@keyframes pageIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 
-                    // 2. Physics integration
-                    this.velocity += this.acceleration;
-                    this.velocity *= this.friction; // Damping
-                    this.angle += this.velocity;
+.curtain {
+  position: fixed; inset: 0; background: var(--ink); z-index: 100;
+  pointer-events: none; transform: translateY(100%);
+}
+.curtain.sweep { animation: curtainSweep 800ms cubic-bezier(.7,0,.3,1) both; }
+@keyframes curtainSweep {
+  0% { transform: translateY(100%); }
+  45% { transform: translateY(0%); }
+  55% { transform: translateY(0%); }
+  100% { transform: translateY(-100%); }
+}
+.curtain-label {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  color: var(--bg); font-family: var(--font-display);
+  font-size: clamp(48px, 10vw, 140px); font-weight: 800; letter-spacing: -0.04em; opacity: 0;
+}
+.curtain.sweep .curtain-label { animation: curtainLabel 800ms cubic-bezier(.7,0,.3,1) both; }
+@keyframes curtainLabel {
+  0%, 30% { opacity: 0; }
+  45%, 55% { opacity: 1; }
+  70%, 100% { opacity: 0; }
+}
 
-                    // Reset acceleration for next frame
-                    this.acceleration = 0;
+.marquee {
+  overflow: hidden; border-top: 2px solid var(--line); border-bottom: 2px solid var(--line);
+  background: var(--ink); color: var(--bg); padding: 14px 0;
+}
+.marquee-track {
+  display: inline-flex; gap: 36px; white-space: nowrap;
+  animation: marquee 40s linear infinite;
+  font-family: var(--font-display); font-weight: 800; font-size: 26px; letter-spacing: -0.02em;
+}
+.marquee-track span { display: inline-flex; align-items: center; gap: 36px; }
+.marquee-track .dot { width: 14px; height: 14px; border-radius: 999px; background: var(--red); display: inline-block; }
+@keyframes marquee { to { transform: translateX(-50%); } }
 
-                    // 3. Render
-                    this.element.style.transform = `rotate(${this.angle}deg)`;
-                }
-            }
+.hero { padding: 60px 0 40px; position: relative; }
+.hero-grid { display: grid; grid-template-columns: 1fr 380px; gap: 48px; align-items: end; }
+.hero-kicker { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+.hero-title { font-size: clamp(56px, 11vw, 168px); margin: 0 0 12px; }
+.hero-title .word { display: inline-block; }
+.hero-title .accent { color: var(--red); font-style: italic; }
+.hero-title .outline { -webkit-text-stroke: 3px var(--ink); color: transparent; }
+[data-theme="dark"] .hero-title .outline { -webkit-text-stroke-color: var(--ink); }
+.hero-sub { font-size: 22px; line-height: 1.35; max-width: 640px; margin: 20px 0 28px; color: var(--ink-soft); }
+.typing {
+  display: inline-block; border-right: 3px solid var(--red); padding-right: 2px;
+  white-space: nowrap; overflow: hidden; vertical-align: baseline;
+  font-family: var(--font-mono); font-size: 20px;
+  animation: caret 0.8s step-end infinite;
+}
+@keyframes caret { 50% { border-color: transparent; } }
+.hero-ctas { display: inline-flex; gap: 14px; flex-wrap: wrap; }
+.hero-side { display: grid; gap: 16px; }
+.stat-card {
+  border: 2px solid var(--line); border-radius: var(--radius); padding: 18px 20px;
+  background: var(--bg); box-shadow: var(--shadow-sm);
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.stat-card.lime { background: var(--lime); color: var(--ink); }
+.stat-card.cobalt { background: var(--cobalt); color: #fff; }
+.stat-card.sun { background: var(--sun); color: var(--ink); }
+.stat-k { font-family: var(--font-display); font-weight: 800; font-size: 36px; line-height: 1; }
+.stat-v { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
 
-            // Initialize system
-            const cards = document.querySelectorAll(
-                ".paper-card",
-            ) as NodeListOf<HTMLElement>;
-            const pendulums = Array.from(cards).map(
-                (card) => new Pendulum(card),
-            );
+.sticker {
+  position: absolute; border: 2px solid var(--line); border-radius: 999px;
+  padding: 8px 16px; font-family: var(--font-mono); font-size: 12px;
+  text-transform: uppercase; letter-spacing: 0.08em; background: var(--bg);
+  box-shadow: var(--shadow-sm); transform: rotate(-6deg);
+  animation: floaty 4s ease-in-out infinite;
+}
+@keyframes floaty {
+  0%, 100% { transform: rotate(-6deg) translateY(0); }
+  50% { transform: rotate(-4deg) translateY(-6px); }
+}
 
-            // Main Loop
-            const loop = () => {
-                // Wind Physics
-                const time = Date.now() * 0.001; // Seconds
-                // Base wind: always swaying slightly
-                // Gusts: varied sine waves
-                // moderate strength for visible but gentle sway
-                const windStrength =
-                    Math.sin(time) * 0.15 + // Slow base sway (was 0.05)
-                    Math.sin(time * 2.5) * 0.05 + // Faster jitters (was 0.02)
-                    Math.sin(time * 0.5) * 0.2; // Long gusts (was 0.1)
+.section-head {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 36px; gap: 20px; flex-wrap: wrap;
+}
+.section-title { font-size: clamp(40px, 6vw, 76px); margin: 10px 0 0; }
+.section-num { font-family: var(--font-mono); font-size: 12px; color: var(--muted); letter-spacing: 0.16em; }
 
-                pendulums.forEach((p, index) => {
-                    // Add phase offset based on index so they don't move in perfect unison
-                    // Some cards might be "shielded" or react differently (random factor)
-                    const phase = index * 2;
-                    const localWind =
-                        windStrength + Math.sin(time + phase) * 0.05;
+.work-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.work-card {
+  border: 2px solid var(--line); border-radius: var(--radius); overflow: hidden;
+  background: var(--bg); box-shadow: var(--shadow);
+  transition: transform var(--t), box-shadow var(--t); cursor: pointer; position: relative;
+}
+.work-card:hover { transform: translate(-4px, -4px); box-shadow: 11px 11px 0 var(--line); }
+.work-thumb { aspect-ratio: 16/10; border-bottom: 2px solid var(--line); position: relative; overflow: hidden; }
+.work-meta { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 8px; }
+.work-title { font-family: var(--font-display); font-weight: 800; font-size: 28px; letter-spacing: -0.02em; line-height: 1; }
+.work-desc { color: var(--ink-soft); font-size: 15px; margin: 0; }
+.work-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.tag {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 3px 8px; border: 2px solid var(--line); border-radius: 999px; background: var(--bg-alt);
+}
+.work-corner { position: absolute; top: 14px; right: 14px; z-index: 2; }
 
-                    p.applyForce(localWind);
-                    p.update();
-                });
+.devlog {
+  display: grid; grid-template-columns: 1fr; gap: 0;
+  border: 2px solid var(--line); border-radius: var(--radius);
+  overflow: hidden; background: var(--bg); box-shadow: var(--shadow);
+}
+.devlog-entry {
+  display: grid; grid-template-columns: 140px 1fr 180px;
+  gap: 20px; padding: 22px 24px; border-bottom: 2px solid var(--line);
+  align-items: center; transition: background var(--t-fast); cursor: pointer;
+}
+.devlog-entry:last-child { border-bottom: none; }
+.devlog-entry:hover { background: var(--bg-alt); }
+.devlog-date { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; color: var(--muted); }
+.devlog-title { font-family: var(--font-display); font-weight: 800; font-size: 22px; letter-spacing: -0.02em; line-height: 1.05; }
+.devlog-excerpt { font-size: 14px; color: var(--ink-soft); margin-top: 4px; }
+.devlog-thumb { width: 180px; height: 100px; border: 2px solid var(--line); border-radius: 10px; overflow: hidden; justify-self: end; }
 
-                requestAnimationFrame(loop);
-            };
+.footer { border-top: 2px solid var(--line); padding: 40px 0 28px; margin-top: 60px; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; margin-bottom: 40px; }
+.footer h4 { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; margin: 0 0 14px; color: var(--muted); }
+.footer ul { list-style: none; padding: 0; margin: 0; }
+.footer ul li { margin-bottom: 8px; }
+.footer a:hover { color: var(--red); }
+.footer-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-top: 22px; border-top: 2px solid var(--line);
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--muted);
+}
 
-            // Start
-            loop();
-        </script>
-    </body>
+.cursor-dot {
+  position: fixed; top: 0; left: 0; width: 14px; height: 14px;
+  background: var(--red); border: 2px solid var(--line); border-radius: 999px;
+  pointer-events: none; z-index: 200; transform: translate(-50%, -50%);
+  transition: width var(--t), height var(--t), background var(--t);
+}
+.cursor-ring {
+  position: fixed; top: 0; left: 0; width: 36px; height: 36px;
+  border: 2px solid var(--line); border-radius: 999px;
+  pointer-events: none; z-index: 199; transform: translate(-50%, -50%);
+  transition: width 300ms cubic-bezier(.2,.8,.2,1), height 300ms cubic-bezier(.2,.8,.2,1), opacity var(--t);
+}
+.cursor-hot .cursor-dot { width: 28px; height: 28px; background: var(--lime); }
+.cursor-hot .cursor-ring { width: 56px; height: 56px; }
+@media (hover: none) { .cursor-dot, .cursor-ring { display: none; } }
+
+.about-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 48px; align-items: start; }
+.portrait { aspect-ratio: 4/5; border: 2px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-lg); overflow: hidden; position: relative; }
+.fact-list { display: grid; gap: 10px; margin-top: 24px; }
+.fact { display: grid; grid-template-columns: 120px 1fr; gap: 18px; padding: 12px 0; border-bottom: 2px dashed var(--line); align-items: baseline; }
+.fact-k { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+.fact-v { font-weight: 500; }
+
+.now-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.now-card { border: 2px solid var(--line); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 14px; background: var(--bg); }
+.now-card.big { grid-column: span 2; }
+.now-card.red { background: var(--red); color: #fff; }
+.now-card.lime { background: var(--lime); color: var(--ink); }
+.now-card.cobalt { background: var(--cobalt); color: #fff; }
+.now-card.plum { background: var(--plum); color: #fff; }
+.now-card.sun { background: var(--sun); color: var(--ink); }
+.now-card.mint { background: var(--mint); color: var(--ink); }
+.now-icon { width: 44px; height: 44px; border: 2px solid var(--line); background: var(--bg); border-radius: 12px; display: grid; place-items: center; font-size: 22px; color: var(--ink); }
+.progress { height: 14px; border: 2px solid var(--line); border-radius: 999px; background: var(--bg); overflow: hidden; }
+.progress-bar { height: 100%; background: var(--ink); border-right: 2px solid var(--line); }
+
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+.form-field { display: grid; gap: 6px; margin-bottom: 16px; }
+.form-field label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.form-field input, .form-field textarea, .form-field select {
+  border: 2px solid var(--line); background: var(--bg); color: var(--ink);
+  padding: 12px 14px; border-radius: 12px; font-family: inherit; font-size: 16px;
+  transition: box-shadow var(--t-fast), transform var(--t-fast);
+}
+.form-field input:focus, .form-field textarea:focus, .form-field select:focus {
+  outline: none; box-shadow: var(--shadow-sm); transform: translate(-2px, -2px);
+}
+.form-field textarea { min-height: 140px; resize: vertical; }
+
+.resume-row {
+  display: grid; grid-template-columns: 160px 1fr 120px; gap: 28px;
+  padding: 18px 0; border-bottom: 2px dashed var(--line); align-items: baseline;
+}
+.resume-row:last-child { border-bottom: none; }
+.resume-title { font-family: var(--font-display); font-weight: 800; font-size: 22px; letter-spacing: -0.02em; }
+.resume-org { color: var(--ink-soft); font-size: 15px; margin-top: 4px; }
+.resume-yr { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.resume-tag { justify-self: end; }
+
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 150;
+  display: grid; place-items: center; padding: 40px 20px;
+  animation: fade 200ms ease both; overflow-y: auto;
+}
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+.modal {
+  background: var(--bg); color: var(--ink); border: 2px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow-lg);
+  max-width: 860px; width: 100%; max-height: calc(100vh - 80px); overflow-y: auto;
+  animation: pop 300ms cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes pop { from { opacity: 0; transform: translateY(20px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.modal-hero { aspect-ratio: 16/9; border-bottom: 2px solid var(--line); position: relative; overflow: hidden; }
+.modal-body { padding: 32px; }
+.modal-close {
+  position: absolute; top: 20px; right: 20px; width: 40px; height: 40px;
+  border-radius: 999px; border: 2px solid var(--line); background: var(--bg);
+  display: grid; place-items: center; box-shadow: var(--shadow-sm); z-index: 2; color: var(--ink);
+}
+
+.th { width: 100%; height: 100%; background-size: cover; background-position: center; position: relative; }
+.th.grid-play {
+  background: linear-gradient(135deg, rgba(0,0,0,0.08) 25%, transparent 25%) 0 0/24px 24px,
+    linear-gradient(45deg, rgba(0,0,0,0.08) 25%, transparent 25%) 0 12px/24px 24px, var(--lime);
+}
+.th.blueprint {
+  background: linear-gradient(var(--cobalt) 2px, transparent 2px) 0 0/40px 40px,
+    linear-gradient(90deg, var(--cobalt) 2px, transparent 2px) 0 0/40px 40px, #fff;
+}
+.th.sun-rays { background: repeating-conic-gradient(from 0deg at 50% 55%, var(--sun) 0deg 20deg, var(--red) 20deg 40deg); }
+.th.dots { background: radial-gradient(var(--ink) 2px, var(--lime) 2px) 0 0/20px 20px; }
+.th.waves {
+  background: repeating-linear-gradient(90deg, var(--plum) 0 10px, transparent 10px 30px),
+    var(--sun);
+}
+.th.cobalt-solid { background: var(--cobalt); }
+.th.red-solid { background: var(--red); }
+.th.plum-solid { background: var(--plum); }
+.th.lime-solid { background: var(--lime); }
+
+@media (max-width: 980px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 28px; }
+  .hero-side { grid-template-columns: 1fr 1fr; display: grid; }
+  .work-grid { grid-template-columns: 1fr; }
+  .devlog-entry { grid-template-columns: 1fr; gap: 8px; }
+  .devlog-thumb { width: 100%; height: 160px; justify-self: stretch; }
+  .about-grid { grid-template-columns: 1fr; }
+  .now-grid { grid-template-columns: 1fr; }
+  .now-card.big { grid-column: span 1; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .resume-row { grid-template-columns: 1fr; }
+  .resume-tag { justify-self: start; }
+  .nav-links { display: none; }
+  .nav-links.open {
+    display: flex; position: fixed; top: 64px; left: 0; right: 0;
+    background: var(--bg); border-bottom: 2px solid var(--line);
+    flex-direction: column; padding: 16px 28px; gap: 8px; align-items: stretch;
+  }
+}
+.mobile-menu-btn { display: none; }
+@media (max-width: 980px) {
+  .mobile-menu-btn {
+    display: grid; place-items: center; width: 42px; height: 42px;
+    border: 2px solid var(--line); border-radius: 999px; background: var(--bg); font-size: 18px;
+  }
+}
+    </style>
+  </head>
+  <body>
+    <PortfolioApp client:only="react" />
+  </body>
 </html>

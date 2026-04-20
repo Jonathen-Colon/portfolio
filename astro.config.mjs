@@ -7,12 +7,4 @@ import tailwind from '@astrojs/tailwind';
 export default defineConfig({
   output: 'static',
   integrations: [tailwind(), react()],
-  vite: {
-    resolve: {
-      dedupe: ['react', 'react-dom', 'convex'],
-    },
-    ssr: {
-      noExternal: ['@convex-dev/auth'],
-    },
-  },
 });
