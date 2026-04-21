@@ -630,12 +630,12 @@ function ContactPage() {
             </button>
           </form>
           <aside>
-            <div className="card" style={{ padding: 24, marginBottom: 18 }}>
+            <div className="card contact-aside-card">
               <div className="eyebrow" style={{ marginBottom: 10 }}>Direct</div>
               <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 28, letterSpacing: '-0.02em' }}>hi@joncolon.co</div>
               <div className="mono" style={{ marginTop: 8, color: 'var(--muted)' }}>Copy · opens mail</div>
             </div>
-            <div className="card" style={{ padding: 24, marginBottom: 18, background: 'var(--lime)' }}>
+            <div className="card contact-aside-card" style={{ background: 'var(--lime)' }}>
               <div className="eyebrow" style={{ marginBottom: 10, color: '#1a1a1a' }}>Elsewhere</div>
               <div style={{ display: 'grid', gap: 10 }}>
                 <a className="nav-link" style={{ justifySelf: 'start', background: '#141414', color: '#F4EFE6' }} href="https://x.com/joncolon">X / Twitter → @joncolon</a>
@@ -668,7 +668,7 @@ function ResumePage({ resume }: { resume: Resume | null }) {
           </div>
           <button className="btn btn-lime">Download PDF <span>↓</span></button>
         </div>
-        <div className="card flat" style={{ padding: '4px 32px' }}>
+        <div className="card flat resume-card-inner">
           <h3 className="eyebrow" style={{ margin: '28px 0 6px' }}>Work</h3>
           {resume.work.map((r, i) => (
             <div key={i} className="resume-row">
@@ -694,7 +694,7 @@ function ResumePage({ resume }: { resume: Resume | null }) {
             </div>
           ))}
           <h3 className="eyebrow" style={{ margin: '32px 0 16px' }}>Skills</h3>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, paddingBottom: 32 }}>
+          <div className="resume-skills">
             {resume.skills.map(s => <span key={s} className="pill">{s}</span>)}
           </div>
         </div>
@@ -886,7 +886,7 @@ function HomeBlogTeaser({ openPost, go, posts }: { openPost: (p: Post) => void; 
             <div style={{ aspectRatio: '16/10', borderBottom: '2px solid var(--line)', overflow: 'hidden' }}>
               <ThumbPost post={p} />
             </div>
-            <div style={{ padding: '20px 22px' }}>
+            <div className="blog-teaser-body">
               <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10 }}>
                 <span className={`pill ${p.tag === 'Devlog' ? 'plum' : p.tag === 'Design' ? 'red' : p.tag === 'Code' ? 'cobalt' : 'lime'}`}>{p.tag}</span>
                 <span className="mono" style={{ color: 'var(--muted)' }}>{p.date}</span>
