@@ -41,6 +41,10 @@ function ShellInner() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!sanityClient) {
+      setLoading(false);
+      return;
+    }
     Promise.all([
       sanityClient.fetch('*[_type == "project" && kind == "web"] | order(_createdAt asc)'),
       sanityClient.fetch('*[_type == "project" && kind == "game"] | order(_createdAt asc)'),
