@@ -6,8 +6,8 @@ import { schemaTypes } from './sanity/schemas'
 export default defineConfig({
   name: 'portfolio',
   title: 'Portfolio CMS',
-  projectId: process.env.SANITY_PROJECT_ID ?? '',
-  dataset: process.env.SANITY_DATASET ?? 'production',
+  projectId: '9iuyaqcg',
+  dataset: 'production',
   plugins: [structureTool(), visionTool()],
   schema: { types: schemaTypes },
 })

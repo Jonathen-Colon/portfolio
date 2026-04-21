@@ -346,7 +346,7 @@ function Hero({ go }: { go: (id: string) => void }) {
         <div>
           <div className="hero-kicker">
             <span className="pill red"><span style={{ width: 8, height: 8, borderRadius: 99, background: '#fff', display: 'inline-block', boxShadow: '0 0 0 2px #141414' }} /> Available May</span>
-            <span className="pill">Brooklyn / Lisbon</span>
+            <span className="pill">Southern MA</span>
           </div>
           <h1 className="hero-title display">
             <span className="word">Jon</span>{' '}
@@ -384,7 +384,7 @@ function Hero({ go }: { go: (id: string) => void }) {
 }
 
 function MarqueeStrip() {
-  const items = ['Available May 2026', 'Interactive prototypes', 'Web design', 'Indie games', 'Design systems', 'Brooklyn / Lisbon', 'Taking clients'];
+  const items = ['Available May 2026', 'Interactive prototypes', 'Web design', 'Indie games', 'Design systems', 'Southern MA', 'Taking clients'];
   const full = [...items, ...items];
   return (
     <div className="marquee">
@@ -1006,7 +1006,7 @@ export default function PortfolioApp() {
         <div className="nav-inner">
           <a className="logo" onClick={() => go('home')} style={{ cursor: 'pointer' }}>
             <span className="logo-badge">JC</span>
-            <span>joncolon<span style={{ color: 'var(--red)' }}>.co</span></span>
+            <span>joncolon<span style={{ color: 'var(--red)' }}>.dev</span></span>
           </a>
           <div className={`nav-links${mobileOpen ? ' open' : ''}`}>
             {PAGES.map(p => (
