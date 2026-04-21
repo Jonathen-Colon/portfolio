@@ -354,7 +354,10 @@ function Hero({ go }: { go: (id: string) => void }) {
 
   return (
     <section className="hero wrap" ref={parallaxRef}>
-      <div style={{ position: 'absolute', inset: '40px 28px 40px auto', width: 360, pointerEvents: 'none', transform: 'translate(calc(var(--px, 0) * -12px), calc(var(--py, 0) * -8px))', transition: 'transform 120ms linear', zIndex: 0 }}>
+      <div
+        className="hero-backdrop"
+        style={{ position: 'absolute', inset: '40px 28px 40px auto', width: 360, pointerEvents: 'none', transform: 'translate(calc(var(--px, 0) * -12px), calc(var(--py, 0) * -8px))', transition: 'transform 120ms linear', zIndex: 0 }}
+      >
         <HeroBackdrop />
       </div>
       <div className="hero-grid" style={{ position: 'relative', zIndex: 1 }}>
@@ -724,7 +727,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
           <p style={{ fontSize: 18, color: 'var(--ink-soft)', margin: '0 0 24px' }}>{project.desc}</p>
           {project.body.map((p, i) => <p key={i} style={{ fontSize: 16, lineHeight: 1.65, color: 'var(--ink-soft)' }}>{p}</p>)}
           {project.shots && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, margin: '28px 0' }}>
+            <div className="modal-shots-grid">
               {project.shots.map((s, i) => (
                 <div key={i} style={{ aspectRatio: '4/3', border: '2px solid var(--line)', borderRadius: 10, overflow: 'hidden' }}>
                   <div className={`th ${s}`} style={{ width: '100%', height: '100%' }} />
@@ -877,7 +880,7 @@ function HomeBlogTeaser({ openPost, go, posts }: { openPost: (p: Post) => void; 
         </div>
         <button className="nav-link" onClick={() => go('blog')}>All posts →</button>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+      <div className="blog-teaser-grid">
         {teaserPosts.map((p) => (
           <article key={p.id} className="card" style={{ cursor: 'pointer' }} onClick={() => openPost(p)}>
             <div style={{ aspectRatio: '16/10', borderBottom: '2px solid var(--line)', overflow: 'hidden' }}>
@@ -902,7 +905,7 @@ function HomeCTA({ go }: { go: (id: string) => void }) {
   return (
     <section className="section">
       <div className="wrap">
-        <div style={{ border: '2px solid var(--line)', borderRadius: 24, padding: '64px 40px', background: 'var(--ink)', color: 'var(--bg)', display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 40, alignItems: 'center', boxShadow: 'var(--shadow-lg)' }}>
+        <div className="home-cta-panel">
           <div>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--red)', marginBottom: 14 }}>→ Available May 2026</div>
             <div className="display" style={{ fontSize: 'clamp(40px, 6vw, 78px)', lineHeight: 0.95, margin: 0 }}>
