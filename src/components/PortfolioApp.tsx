@@ -14,63 +14,11 @@ function useFinePointer() {
     () => false
   );
 }
-import { sanityClient } from '../lib/sanityClient';
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-interface Project {
-  id: string;
-  title: string;
-  year: string;
-  kind: string;
-  role: string;
-  desc: string;
-  tags: string[];
-  accent: string;
-  thumb: string;
-  live?: string;
-  repo?: string;
-  itch?: string;
-  media?: string;
-  body: string[];
-  shots?: string[];
-}
-
-interface Post {
-  id: string;
-  date: string;
-  title: string;
-  excerpt: string;
-  read: string;
-  tag: string;
-  thumb: string;
-  body: string[];
-}
-
-interface NowItem {
-  title: string;
-  body: string;
-  progress: number | null;
-  color: string;
-  icon: string;
-}
-
-interface ResumeRow {
-  title: string;
-  org: string;
-  year: string;
-  tag?: string;
-}
-
-interface Resume {
-  work: ResumeRow[];
-  speaking: ResumeRow[];
-  education: ResumeRow[];
-  skills: string[];
-}
+import type { Project, Post, NowItem, Resume } from '../data/portfolio';
+import { webProjects, gameProjects, posts, nowItems, resume as resumeContent } from '../data/portfolio';
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
-// Data is fetched from Sanity CMS at runtime in PortfolioApp via useEffect.
+// Portfolio copy lives in `src/data/portfolio.ts`.
 
 // ─── PRNG ─────────────────────────────────────────────────────────────────────
 
@@ -1003,28 +951,7 @@ export default function PortfolioApp({ initialPage = 'home' }: { initialPage?: s
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
 
-  const [webProjects, setWebProjects] = useState<Project[]>([]);
-  const [gameProjects, setGameProjects] = useState<Project[]>([]);
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [nowItems, setNowItems] = useState<NowItem[]>([]);
-  const [resume, setResume] = useState<Resume | null>(null);
   const finePointer = useFinePointer();
-
-  useEffect(() => {
-    Promise.all([
-      sanityClient.fetch('*[_type == "project" && kind == "web"] | order(_createdAt asc)'),
-      sanityClient.fetch('*[_type == "project" && kind == "game"] | order(_createdAt asc)'),
-      sanityClient.fetch('*[_type == "post"] | order(date desc)'),
-      sanityClient.fetch('*[_type == "nowItem"]'),
-      sanityClient.fetch('*[_type == "resume"][0]'),
-    ]).then(([web, game, ps, now, res]) => {
-      setWebProjects(web ?? []);
-      setGameProjects(game ?? []);
-      setPosts(ps ?? []);
-      setNowItems(now ?? []);
-      setResume(res ?? null);
-    });
-  }, []);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -1152,7 +1079,7 @@ export default function PortfolioApp({ initialPage = 'home' }: { initialPage?: s
       {page === 'about' && <div key="about"><AboutPage /></div>}
       {page === 'now' && <div key="now"><NowPage nowItems={nowItems} /></div>}
       {page === 'contact' && <div key="contact"><ContactPage /></div>}
-      {page === 'resume' && <div key="resume"><ResumePage resume={resume} /></div>}
+      {page === 'resume' && <div key="resume"><ResumePage resume={resumeContent} /></div>}
 
       <Footer go={go} />
 

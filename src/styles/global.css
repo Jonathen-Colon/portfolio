@@ -1,3 +1,6 @@
+@import "tailwindcss";
+@config "../../tailwind.config.mjs";
+
 :root {
   --bg: #F4EFE6;
   --bg-alt: #EAE3D4;
