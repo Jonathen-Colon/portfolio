@@ -1,4 +1,19 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo, useSyncExternalStore } from 'react';
+
+const FINE_POINTER_MQ = '(hover: hover) and (pointer: fine)';
+
+function useFinePointer() {
+  return useSyncExternalStore(
+    (onChange) => {
+      if (typeof window === 'undefined') return () => {};
+      const mq = window.matchMedia(FINE_POINTER_MQ);
+      mq.addEventListener('change', onChange);
+      return () => mq.removeEventListener('change', onChange);
+    },
+    () => (typeof window !== 'undefined' ? window.matchMedia(FINE_POINTER_MQ).matches : false),
+    () => false
+  );
+}
 import { sanityClient } from '../lib/sanityClient';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -981,7 +996,7 @@ export default function PortfolioApp({ initialPage = 'home' }: { initialPage?: s
   const [posts, setPosts] = useState<Post[]>([]);
   const [nowItems, setNowItems] = useState<NowItem[]>([]);
   const [resume, setResume] = useState<Resume | null>(null);
-  const [loading, setLoading] = useState(true);
+  const finePointer = useFinePointer();
 
   useEffect(() => {
     Promise.all([
@@ -996,7 +1011,7 @@ export default function PortfolioApp({ initialPage = 'home' }: { initialPage?: s
       setPosts(ps ?? []);
       setNowItems(now ?? []);
       setResume(res ?? null);
-    }).finally(() => setLoading(false));
+    });
   }, []);
 
   useEffect(() => {
@@ -1034,8 +1049,9 @@ export default function PortfolioApp({ initialPage = 'home' }: { initialPage?: s
     setTimeout(() => setCurtain({ on: false, label: '' }), 820);
   }, [page]);
 
-  // Custom cursor
+  // Custom cursor (desktop / fine pointer only — avoids listeners and DOM on touch)
   useEffect(() => {
+    if (!finePointer) return;
     let rx = window.innerWidth / 2, ry = window.innerHeight / 2;
     let tx = rx, ty = ry;
     let raf: number;
@@ -1052,20 +1068,16 @@ export default function PortfolioApp({ initialPage = 'home' }: { initialPage?: s
     window.addEventListener('mousemove', mm);
     raf = requestAnimationFrame(tick);
     return () => { window.removeEventListener('mousemove', mm); cancelAnimationFrame(raf); };
-  }, []);
-
-  if (loading) {
-    return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <span className="font-mono" style={{ color: 'var(--muted)', fontSize: 13, letterSpacing: '0.08em' }}>Loading...</span>
-      </div>
-    );
-  }
+  }, [finePointer]);
 
   return (
     <>
-      <div ref={dotRef} className="cursor-dot" />
-      <div ref={ringRef} className="cursor-ring" />
+      {finePointer && (
+        <>
+          <div ref={dotRef} className="cursor-dot" />
+          <div ref={ringRef} className="cursor-ring" />
+        </>
+      )}
 
       {curtain.on && (
         <div className="curtain sweep">
