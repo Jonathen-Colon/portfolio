@@ -302,7 +302,10 @@ button { font-family: inherit; cursor: pointer; }
 }
 .cursor-hot .cursor-dot { width: 28px; height: 28px; background: var(--lime); }
 .cursor-hot .cursor-ring { width: 56px; height: 56px; }
-@media (hover: none) { .cursor-dot, .cursor-ring { display: none; } }
+/* Touch / coarse pointer: no custom cursor overlay */
+@media (hover: none), (pointer: coarse) {
+  .cursor-dot, .cursor-ring { display: none !important; }
+}
 
 .about-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 48px; align-items: start; }
 .portrait { aspect-ratio: 4/5; border: 2px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-lg); overflow: hidden; position: relative; }
