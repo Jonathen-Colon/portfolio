@@ -312,6 +312,10 @@ function Hero({ go }: { go: (id: string) => void }) {
     'things that click',
     'pixel art at 2 a.m.',
   ], []);
+  const longestPhrase = useMemo(
+    () => phrases.reduce((a, b) => (a.length >= b.length ? a : b), phrases[0] ?? ''),
+    [phrases]
+  );
   const [idx, setIdx] = useState(0);
   const [sub, setSub] = useState('');
   const [phase, setPhase] = useState<'typing' | 'deleting'>('typing');
@@ -375,7 +379,12 @@ function Hero({ go }: { go: (id: string) => void }) {
           </h1>
           <p className="hero-sub">
             Designer, developer and part-time game dev. Currently making{' '}
-            <span className="typing">{sub}</span>
+            <span className="hero-typing-slot">
+              <span className="typing typing-measure" aria-hidden="true">
+                {longestPhrase}
+              </span>
+              <span className="typing typing-live">{sub}</span>
+            </span>
           </p>
           <div className="hero-ctas">
             <button className="btn" onClick={() => go('web')}>See the work <span>→</span></button>

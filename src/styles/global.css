@@ -215,11 +215,27 @@ button { font-family: inherit; cursor: pointer; }
 .hero-title .outline { -webkit-text-stroke: 3px var(--ink); color: transparent; }
 [data-theme="dark"] .hero-title .outline { -webkit-text-stroke-color: var(--ink); }
 .hero-sub { font-size: 22px; line-height: 1.35; max-width: 640px; margin: 20px 0 28px; color: var(--ink-soft); overflow-wrap: anywhere; }
+.hero-typing-slot {
+  position: relative;
+  display: inline-block;
+  vertical-align: baseline;
+}
 .typing {
   display: inline-block; border-right: 3px solid var(--red); padding-right: 2px;
   white-space: nowrap; overflow: hidden; vertical-align: baseline;
   font-family: var(--font-mono); font-size: 20px;
   animation: caret 0.8s step-end infinite;
+}
+.typing-measure {
+  visibility: hidden;
+  animation: none;
+  border-right-color: transparent;
+  pointer-events: none;
+}
+.typing-live {
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 @keyframes caret { 50% { border-color: transparent; } }
 .hero-ctas { display: inline-flex; gap: 14px; flex-wrap: wrap; }
