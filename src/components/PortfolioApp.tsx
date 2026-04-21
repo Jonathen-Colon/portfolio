@@ -768,6 +768,20 @@ function PostModal({ post, onClose }: { post: Post; onClose: () => void }) {
 // ─── Footer ───────────────────────────────────────────────────────────────────
 
 function Footer({ go }: { go: (id: string) => void }) {
+  function navLink(pageId: string, label: string) {
+    return (
+      <a
+        href={pageToPath(pageId)}
+        onClick={(e) => {
+          e.preventDefault();
+          go(pageId);
+        }}
+        style={{ cursor: 'pointer' }}
+      >
+        {label}
+      </a>
+    );
+  }
   return (
     <footer className="footer">
       <div className="wrap">
@@ -779,19 +793,19 @@ function Footer({ go }: { go: (id: string) => void }) {
           <div>
             <h4>Site</h4>
             <ul>
-              <li><a onClick={() => go('home')} style={{ cursor: 'pointer' }}>Home</a></li>
-              <li><a onClick={() => go('web')} style={{ cursor: 'pointer' }}>Web work</a></li>
-              <li><a onClick={() => go('games')} style={{ cursor: 'pointer' }}>Games</a></li>
-              <li><a onClick={() => go('blog')} style={{ cursor: 'pointer' }}>Devlog</a></li>
+              <li>{navLink('home', 'Home')}</li>
+              <li>{navLink('web', 'Web work')}</li>
+              <li>{navLink('games', 'Games')}</li>
+              <li>{navLink('blog', 'Devlog')}</li>
             </ul>
           </div>
           <div>
             <h4>About</h4>
             <ul>
-              <li><a onClick={() => go('about')} style={{ cursor: 'pointer' }}>Bio</a></li>
-              <li><a onClick={() => go('now')} style={{ cursor: 'pointer' }}>Now</a></li>
-              <li><a onClick={() => go('resume')} style={{ cursor: 'pointer' }}>Resume</a></li>
-              <li><a onClick={() => go('contact')} style={{ cursor: 'pointer' }}>Contact</a></li>
+              <li>{navLink('about', 'Bio')}</li>
+              <li>{navLink('now', 'Now')}</li>
+              <li>{navLink('resume', 'Resume')}</li>
+              <li>{navLink('contact', 'Contact')}</li>
             </ul>
           </div>
           <div>
@@ -905,11 +919,52 @@ const PAGES = [
   { id: 'contact', label: 'Contact' },
 ];
 
+const PAGE_TO_PATH: Record<string, string> = {
+  home: '/',
+  web: '/web',
+  games: '/games',
+  blog: '/devlog',
+  about: '/about',
+  now: '/now',
+  resume: '/resume',
+  contact: '/contact',
+};
+
+const PATH_TO_PAGE: Record<string, string> = Object.fromEntries(
+  Object.entries(PAGE_TO_PATH).map(([k, v]) => [v, k])
+);
+
+const PAGE_TITLES: Record<string, string> = {
+  home: 'Jon Colon — Designer, Developer, Game Dev',
+  web: 'Web work — Jon Colon',
+  games: 'Games — Jon Colon',
+  blog: 'Devlog — Jon Colon',
+  about: 'About — Jon Colon',
+  now: 'Now — Jon Colon',
+  resume: 'Resume — Jon Colon',
+  contact: 'Contact — Jon Colon',
+};
+
+function normalizePathname(pathname: string) {
+  if (pathname.length > 1 && pathname.endsWith('/')) return pathname.slice(0, -1);
+  return pathname;
+}
+
+function pathToPage(pathname: string) {
+  const p = normalizePathname(pathname);
+  return PATH_TO_PAGE[p] ?? 'home';
+}
+
+function pageToPath(pageId: string) {
+  return PAGE_TO_PATH[pageId] ?? '/';
+}
+
 // ─── App ──────────────────────────────────────────────────────────────────────
 
-export default function PortfolioApp() {
+export default function PortfolioApp({ initialPage = 'home' }: { initialPage?: string }) {
   const [page, setPage] = useState<string>(() => {
-    try { return localStorage.getItem('jc-page') || 'home'; } catch { return 'home'; }
+    if (typeof window !== 'undefined') return pathToPage(window.location.pathname);
+    return PAGES.some(p => p.id === initialPage) ? initialPage : 'home';
   });
   const [theme, setTheme] = useState<string>(() => {
     try { return localStorage.getItem('jc-theme') || 'light'; } catch { return 'light'; }
@@ -950,16 +1005,32 @@ export default function PortfolioApp() {
   }, [theme]);
 
   useEffect(() => {
-    try { localStorage.setItem('jc-page', page); } catch { }
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   }, [page]);
+
+  useEffect(() => {
+    function onPopState() {
+      setPage(pathToPage(window.location.pathname));
+    }
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
 
   const go = useCallback((id: string) => {
     if (id === page) return;
     const label = PAGES.find(p => p.id === id)?.label || '';
+    const nextPath = pageToPath(id);
+    if (typeof window !== 'undefined' && window.location.pathname !== nextPath) {
+      window.history.pushState({ page: id }, '', nextPath);
+    }
     setCurtain({ on: true, label });
     setMobileOpen(false);
-    setTimeout(() => setPage(id), 380);
+    setTimeout(() => {
+      setPage(id);
+      if (typeof document !== 'undefined') {
+        document.title = PAGE_TITLES[id] ?? PAGE_TITLES.home;
+      }
+    }, 380);
     setTimeout(() => setCurtain({ on: false, label: '' }), 820);
   }, [page]);
 
@@ -1004,15 +1075,31 @@ export default function PortfolioApp() {
 
       <nav className="nav">
         <div className="nav-inner">
-          <a className="logo" onClick={() => go('home')} style={{ cursor: 'pointer' }}>
+          <a
+            className="logo"
+            href={pageToPath('home')}
+            onClick={(e) => {
+              e.preventDefault();
+              go('home');
+            }}
+            style={{ cursor: 'pointer' }}
+          >
             <span className="logo-badge">JC</span>
             <span>joncolon<span style={{ color: 'var(--red)' }}>.dev</span></span>
           </a>
           <div className={`nav-links${mobileOpen ? ' open' : ''}`}>
             {PAGES.map(p => (
-              <button key={p.id} className={`nav-link${page === p.id ? ' active' : ''}`} onClick={() => go(p.id)}>
+              <a
+                key={p.id}
+                href={pageToPath(p.id)}
+                className={`nav-link${page === p.id ? ' active' : ''}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  go(p.id);
+                }}
+              >
                 {p.label}
-              </button>
+              </a>
             ))}
           </div>
           <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
