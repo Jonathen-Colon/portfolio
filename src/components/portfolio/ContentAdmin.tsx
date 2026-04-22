@@ -1,10 +1,11 @@
 import { ConvexAuthProvider, useAuthActions } from "@convex-dev/auth/react";
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import type { Post, Project } from "../../data/portfolioContent";
 import { convexClient, hasConvex } from "../../lib/convexClient";
+import { ProjectThumb } from "./Thumbnails";
 
 function linesToBody(s: string): string[] {
   return s
@@ -15,6 +16,17 @@ function linesToBody(s: string): string[] {
 
 function bodyToLines(body: string[]): string {
   return body.join("\n");
+}
+
+function tagsToDraft(tags: string[] | undefined): string {
+  return (tags ?? []).join(", ");
+}
+
+function draftToTags(s: string): string[] {
+  return s
+    .split(",")
+    .map((t) => t.trim())
+    .filter(Boolean);
 }
 
 function formatAuthError(err: unknown): string {
@@ -151,6 +163,7 @@ function AdminWorkspace() {
 
   const [postForm, setPostForm] = useState<Partial<Post>>({});
   const [projectForm, setProjectForm] = useState<Partial<Project>>({});
+  const [projectTagsDraft, setProjectTagsDraft] = useState("");
 
   useEffect(() => {
     if (!selectedPost) {
@@ -167,6 +180,16 @@ function AdminWorkspace() {
     }
     setProjectForm({ ...selectedProject });
   }, [selectedProject]);
+
+  useEffect(() => {
+    if (!selectedProject) return;
+    setProjectTagsDraft(tagsToDraft(selectedProject.tags));
+  }, [selectedProject]);
+
+  const syncProjectTagsFromDraft = useCallback((draft: string) => {
+    setProjectTagsDraft(draft);
+    setProjectForm((f) => ({ ...f, tags: draftToTags(draft) }));
+  }, []);
 
   const run = async (fn: () => Promise<unknown>, ok: string) => {
     setError(null);
@@ -407,7 +430,10 @@ function AdminWorkspace() {
                     type="button"
                     className="btn btn-ghost"
                     style={{ width: "100%", textAlign: "left", fontSize: 14 }}
-                    onClick={() => setSelectedProjectId(p.id)}
+                    onClick={() => {
+                      setSelectedProjectId(p.id);
+                      setProjectTagsDraft(tagsToDraft(p.tags));
+                    }}
                   >
                     {p.title}
                   </button>
@@ -420,6 +446,7 @@ function AdminWorkspace() {
               style={{ marginTop: 16, width: "100%" }}
               onClick={() => {
                 setSelectedProjectId(null);
+                setProjectTagsDraft("");
                 setProjectForm({
                   id: "new-project",
                   title: "",
@@ -492,16 +519,8 @@ function AdminWorkspace() {
                 <div className="form-field">
                   <label>tags (comma-separated)</label>
                   <input
-                    value={(projectForm.tags ?? []).join(", ")}
-                    onChange={(e) =>
-                      setProjectForm((f) => ({
-                        ...f,
-                        tags: e.target.value
-                          .split(",")
-                          .map((t) => t.trim())
-                          .filter(Boolean),
-                      }))
-                    }
+                    value={projectTagsDraft}
+                    onChange={(e) => syncProjectTagsFromDraft(e.target.value)}
                   />
                 </div>
                 <div className="form-field">
@@ -545,6 +564,18 @@ function AdminWorkspace() {
                     value={projectForm.media ?? ""}
                     onChange={(e) => setProjectForm((f) => ({ ...f, media: e.target.value || undefined }))}
                   />
+                  <div
+                    style={{
+                      marginTop: 12,
+                      aspectRatio: "16 / 9",
+                      border: "2px solid var(--line)",
+                      borderRadius: 10,
+                      overflow: "hidden",
+                      background: "var(--paper-2)",
+                    }}
+                  >
+                    <ProjectThumb id={projectForm.id ?? ""} media={projectForm.media} />
+                  </div>
                 </div>
                 <div className="form-field">
                   <label>body (one paragraph per line)</label>
