@@ -14,6 +14,22 @@ function useFinePointer() {
     () => false
   );
 }
+
+/** Narrow nav sheet or no primary hover — use click to toggle dropdowns */
+const NEED_CLICK_NAV_MENU_MQ = '(max-width: 980px), (hover: none)';
+
+function useNeedClickNavMenu() {
+  return useSyncExternalStore(
+    (onChange) => {
+      if (typeof window === 'undefined') return () => {};
+      const mq = window.matchMedia(NEED_CLICK_NAV_MENU_MQ);
+      mq.addEventListener('change', onChange);
+      return () => mq.removeEventListener('change', onChange);
+    },
+    () => (typeof window !== 'undefined' ? window.matchMedia(NEED_CLICK_NAV_MENU_MQ).matches : true),
+    () => true
+  );
+}
 import type { Project, Post, NowItem, Resume } from '../data/portfolio';
 import { webProjects, gameProjects, posts, nowItems, resume as resumeContent } from '../data/portfolio';
 
@@ -894,6 +910,22 @@ const PAGES = [
   { id: 'contact', label: 'Contact' },
 ];
 
+const NAV_WORK_ITEMS = [
+  { id: 'web', label: 'Web' },
+  { id: 'games', label: 'Games' },
+  { id: 'blog', label: 'Devlog' },
+  { id: 'now', label: 'Now' },
+] as const;
+
+const NAV_ABOUT_ITEMS = [
+  { id: 'about', label: 'About' },
+  { id: 'resume', label: 'Resume' },
+  { id: 'contact', label: 'Contact' },
+] as const;
+
+const NAV_WORK_IDS = new Set<string>(NAV_WORK_ITEMS.map((i) => i.id));
+const NAV_ABOUT_IDS = new Set<string>(NAV_ABOUT_ITEMS.map((i) => i.id));
+
 const PAGE_TO_PATH: Record<string, string> = {
   home: '/',
   web: '/web',
@@ -948,10 +980,14 @@ export default function PortfolioApp({ initialPage = 'home' }: { initialPage?: s
   const [modalProject, setModalProject] = useState<Project | null>(null);
   const [modalPost, setModalPost] = useState<Post | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState<'work' | 'about' | null>(null);
+  const [hoverMenusDismissed, setHoverMenusDismissed] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
 
   const finePointer = useFinePointer();
+  const needClickNavMenu = useNeedClickNavMenu();
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -965,9 +1001,32 @@ export default function PortfolioApp({ initialPage = 'home' }: { initialPage?: s
   useEffect(() => {
     function onPopState() {
       setPage(pathToPage(window.location.pathname));
+      setOpenMenu(null);
+      setHoverMenusDismissed(false);
     }
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
+  useEffect(() => {
+    function onDocMouseDown(e: MouseEvent) {
+      if (navRef.current?.contains(e.target as Node)) return;
+      setOpenMenu(null);
+      setHoverMenusDismissed(true);
+      setMobileOpen(false);
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key !== 'Escape') return;
+      setOpenMenu(null);
+      setHoverMenusDismissed(true);
+      setMobileOpen(false);
+    }
+    document.addEventListener('mousedown', onDocMouseDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDocMouseDown);
+      document.removeEventListener('keydown', onKey);
+    };
   }, []);
 
   const go = useCallback((id: string) => {
@@ -979,6 +1038,8 @@ export default function PortfolioApp({ initialPage = 'home' }: { initialPage?: s
     }
     setCurtain({ on: true, label });
     setMobileOpen(false);
+    setOpenMenu(null);
+    setHoverMenusDismissed(false);
     setTimeout(() => {
       setPage(id);
       if (typeof document !== 'undefined') {
@@ -1024,7 +1085,11 @@ export default function PortfolioApp({ initialPage = 'home' }: { initialPage?: s
         </div>
       )}
 
-      <nav className="nav">
+      <nav
+        ref={navRef}
+        className={`nav${hoverMenusDismissed ? ' nav-dropdown-hover-dismissed' : ''}`}
+        onMouseEnter={() => setHoverMenusDismissed(false)}
+      >
         <div className="nav-inner">
           <a
             className="logo"
@@ -1038,28 +1103,79 @@ export default function PortfolioApp({ initialPage = 'home' }: { initialPage?: s
             <span className="logo-badge">JC</span>
             <span>joncolon<span style={{ color: 'var(--red)' }}>.dev</span></span>
           </a>
-          <div className={`nav-links${mobileOpen ? ' open' : ''}`}>
-            {PAGES.map(p => (
-              <a
-                key={p.id}
-                href={pageToPath(p.id)}
-                className={`nav-link${page === p.id ? ' active' : ''}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  go(p.id);
-                }}
-              >
-                {p.label}
-              </a>
-            ))}
-          </div>
-          <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-            <button className="theme-toggle" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} title="Toggle theme">
-              {theme === 'light' ? '☾' : '☀'}
-            </button>
-            <button className="mobile-menu-btn" onClick={() => setMobileOpen(!mobileOpen)}>
-              {mobileOpen ? '✕' : '≡'}
-            </button>
+          <div className="nav-end">
+            <div className={`nav-links${mobileOpen ? ' open' : ''}`}>
+              <div className={`nav-drop${needClickNavMenu && openMenu === 'work' ? ' open' : ''}`}>
+                <button
+                  type="button"
+                  className={`nav-drop-trigger nav-link${NAV_WORK_IDS.has(page) ? ' active' : ''}`}
+                  aria-expanded={needClickNavMenu ? openMenu === 'work' : undefined}
+                  aria-haspopup="true"
+                  onClick={() => {
+                    if (!needClickNavMenu) return;
+                    setOpenMenu((m) => (m === 'work' ? null : 'work'));
+                  }}
+                >
+                  Work
+                  <span className="nav-drop-caret" aria-hidden>▾</span>
+                </button>
+                <div className="nav-drop-panel" role="menu">
+                  {NAV_WORK_ITEMS.map((item) => (
+                    <a
+                      key={item.id}
+                      role="menuitem"
+                      href={pageToPath(item.id)}
+                      className={`nav-drop-link${page === item.id ? ' active' : ''}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        go(item.id);
+                      }}
+                    >
+                      {item.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+              <div className={`nav-drop${needClickNavMenu && openMenu === 'about' ? ' open' : ''}`}>
+                <button
+                  type="button"
+                  className={`nav-drop-trigger nav-link${NAV_ABOUT_IDS.has(page) ? ' active' : ''}`}
+                  aria-expanded={needClickNavMenu ? openMenu === 'about' : undefined}
+                  aria-haspopup="true"
+                  onClick={() => {
+                    if (!needClickNavMenu) return;
+                    setOpenMenu((m) => (m === 'about' ? null : 'about'));
+                  }}
+                >
+                  About
+                  <span className="nav-drop-caret" aria-hidden>▾</span>
+                </button>
+                <div className="nav-drop-panel" role="menu">
+                  {NAV_ABOUT_ITEMS.map((item) => (
+                    <a
+                      key={item.id}
+                      role="menuitem"
+                      href={pageToPath(item.id)}
+                      className={`nav-drop-link${page === item.id ? ' active' : ''}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        go(item.id);
+                      }}
+                    >
+                      {item.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="nav-controls">
+              <button className="theme-toggle" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} title="Toggle theme">
+                {theme === 'light' ? '☾' : '☀'}
+              </button>
+              <button className="mobile-menu-btn" onClick={() => setMobileOpen(!mobileOpen)}>
+                {mobileOpen ? '✕' : '≡'}
+              </button>
+            </div>
           </div>
         </div>
       </nav>
