@@ -7,15 +7,59 @@ import type { Post, Project } from "../../data/portfolioContent";
 import { convexClient, hasConvex } from "../../lib/convexClient";
 import { ProjectThumb } from "./Thumbnails";
 
-function linesToBody(s: string): string[] {
-  return s
-    .split("\n")
-    .map((l) => l.trim())
-    .filter(Boolean);
+/** Rows shown in the paragraph editor: existing paragraphs plus one trailing slot. */
+function bodyToEditorRows(body: string[]): string[] {
+  if (body.length === 0) return [""];
+  return [...body, ""];
 }
 
-function bodyToLines(body: string[]): string {
-  return body.join("\n");
+function editorRowsToBody(rows: string[]): string[] {
+  return rows.map((r) => r.trim()).filter(Boolean);
+}
+
+function BodyParagraphEditor({
+  idPrefix,
+  body,
+  onChange,
+  hint,
+}: {
+  idPrefix: string;
+  body: string[];
+  onChange: (next: string[]) => void;
+  hint?: string;
+}) {
+  const rows = bodyToEditorRows(body);
+  const storedCount = body.filter((p) => p.trim()).length;
+
+  return (
+    <div className="form-field">
+      <label htmlFor={`${idPrefix}-body-0`}>Body</label>
+      {hint ? <p className="admin-body-editor-hint">{hint}</p> : null}
+      <div className="admin-body-editor">
+        {rows.map((text, i) => (
+          <div key={i} className="admin-body-row">
+            <span className="admin-body-idx" aria-hidden="true">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <textarea
+              id={i === 0 ? `${idPrefix}-body-0` : undefined}
+              aria-label={i === 0 ? "First paragraph" : `Paragraph ${i + 1}`}
+              value={text}
+              placeholder={i === rows.length - 1 ? "Next paragraph…" : "Write this paragraph…"}
+              onChange={(e) => {
+                const next = rows.slice();
+                next[i] = e.target.value;
+                onChange(editorRowsToBody(next));
+              }}
+            />
+          </div>
+        ))}
+      </div>
+      <p className="admin-body-meta">
+        {storedCount} paragraph{storedCount === 1 ? "" : "s"} stored
+      </p>
+    </div>
+  );
 }
 
 function tagsToDraft(tags: string[] | undefined): string {
@@ -79,7 +123,7 @@ function AdminSignIn() {
 
   return (
     <div
-      className="card flat"
+      className="card flat admin-form-card"
       style={{ padding: 24, maxWidth: 440, position: "relative", zIndex: 20, pointerEvents: "auto" }}
     >
       <p className="eyebrow" style={{ marginBottom: 8 }}>
@@ -205,29 +249,27 @@ function AdminWorkspace() {
 
   if (posts === undefined || projects === undefined || contacts === undefined || resumePdf === undefined) {
     return (
-      <div className="wrap section-tight">
+      <div className="wrap admin-section">
         <p className="eyebrow">Loading…</p>
       </div>
     );
   }
 
   return (
-    <div className="wrap section">
-      <header style={{ marginBottom: 32 }}>
-        <p className="eyebrow">Private</p>
-        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start", justifyContent: "space-between", gap: 16 }}>
-          <div>
-            <h1 className="display" style={{ fontSize: "clamp(2rem, 4vw, 3rem)", margin: "8px 0 0" }}>
-              Content admin
-            </h1>
-            <p style={{ color: "var(--muted)", maxWidth: 560, marginTop: 12 }}>
-              Signed in with Convex Auth. Mutations run with your session token.
-            </p>
-          </div>
-          <button type="button" className="btn btn-ghost" onClick={() => void signOut()}>
-            Sign out
-          </button>
+    <div className="wrap admin-section">
+      <header className="admin-header-row">
+        <div>
+          <p className="eyebrow">Private</p>
+          <h1 className="display" style={{ fontSize: "clamp(2rem, 4vw, 3rem)", margin: "8px 0 0" }}>
+            Content admin
+          </h1>
+          <p style={{ color: "var(--muted)", maxWidth: 560, marginTop: 12 }}>
+            Signed in with Convex Auth. Mutations run with your session token.
+          </p>
         </div>
+        <button type="button" className="btn btn-ghost" onClick={() => void signOut()}>
+          Sign out
+        </button>
       </header>
 
       {message && (
@@ -241,7 +283,7 @@ function AdminWorkspace() {
         </p>
       )}
 
-      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 20 }}>
+      <div className="admin-tab-bar" role="tablist" aria-label="Admin sections">
         <button type="button" className={tab === "posts" ? "btn" : "btn btn-ghost"} onClick={() => setTab("posts")}>
           Posts ({sortedPosts.length})
         </button>
@@ -261,8 +303,8 @@ function AdminWorkspace() {
       </div>
 
       {tab === "posts" && (
-        <div style={{ display: "grid", gridTemplateColumns: "minmax(200px, 240px) 1fr", gap: 24 }}>
-          <nav style={{ borderRight: "2px solid var(--line)", paddingRight: 16 }}>
+        <div className="admin-split">
+          <nav className="admin-split-nav" aria-label="Post list">
             <p className="eyebrow" style={{ marginBottom: 12 }}>
               Posts
             </p>
@@ -305,7 +347,7 @@ function AdminWorkspace() {
             {!postForm.id && !selectedPostId ? (
               <p style={{ color: "var(--muted)" }}>Select a post or create a new one.</p>
             ) : (
-              <div className="card flat" style={{ padding: 20 }}>
+              <div className="card flat admin-form-card">
                 <div className="form-field">
                   <label>id (slug)</label>
                   <input
@@ -355,13 +397,12 @@ function AdminWorkspace() {
                     onChange={(e) => setPostForm((f) => ({ ...f, thumb: e.target.value }))}
                   />
                 </div>
-                <div className="form-field">
-                  <label>body (one paragraph per line)</label>
-                  <textarea
-                    value={bodyToLines(postForm.body ?? [])}
-                    onChange={(e) => setPostForm((f) => ({ ...f, body: linesToBody(e.target.value) }))}
-                  />
-                </div>
+                <BodyParagraphEditor
+                  idPrefix="post"
+                  body={postForm.body ?? []}
+                  onChange={(next) => setPostForm((f) => ({ ...f, body: next }))}
+                  hint="Each block is one paragraph on the site. Blank trailing blocks are ignored when you save."
+                />
                 <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                   <button
                     type="button"
@@ -418,8 +459,8 @@ function AdminWorkspace() {
       )}
 
       {tab === "projects" && (
-        <div style={{ display: "grid", gridTemplateColumns: "minmax(200px, 240px) 1fr", gap: 24 }}>
-          <nav style={{ borderRight: "2px solid var(--line)", paddingRight: 16 }}>
+        <div className="admin-split">
+          <nav className="admin-split-nav" aria-label="Project list">
             <p className="eyebrow" style={{ marginBottom: 12 }}>
               Projects
             </p>
@@ -468,7 +509,7 @@ function AdminWorkspace() {
             {!projectForm.id && !selectedProjectId ? (
               <p style={{ color: "var(--muted)" }}>Select a project or create a new one.</p>
             ) : (
-              <div className="card flat" style={{ padding: 20 }}>
+              <div className="card flat admin-form-card">
                 <div className="form-field">
                   <label>id (slug)</label>
                   <input
@@ -577,13 +618,12 @@ function AdminWorkspace() {
                     <ProjectThumb id={projectForm.id ?? ""} media={projectForm.media} />
                   </div>
                 </div>
-                <div className="form-field">
-                  <label>body (one paragraph per line)</label>
-                  <textarea
-                    value={bodyToLines(projectForm.body ?? [])}
-                    onChange={(e) => setProjectForm((f) => ({ ...f, body: linesToBody(e.target.value) }))}
-                  />
-                </div>
+                <BodyParagraphEditor
+                  idPrefix="project"
+                  body={projectForm.body ?? []}
+                  onChange={(next) => setProjectForm((f) => ({ ...f, body: next }))}
+                  hint="Each block is one paragraph in the project modal. Blank trailing blocks are ignored when you save."
+                />
                 <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                   <button
                     type="button"
@@ -642,7 +682,7 @@ function AdminWorkspace() {
       )}
 
       {tab === "contacts" && (
-        <div className="card flat" style={{ padding: 20 }}>
+        <div className="card flat admin-form-card">
           <p className="eyebrow" style={{ marginBottom: 16 }}>
             Contact submissions
           </p>
@@ -675,7 +715,7 @@ function AdminWorkspace() {
       )}
 
       {tab === "resume" && (
-        <div className="card flat" style={{ padding: 20 }}>
+        <div className="card flat admin-form-card">
           <p className="eyebrow" style={{ marginBottom: 16 }}>
             Upload CV PDF
           </p>
@@ -765,7 +805,7 @@ function AdminInner() {
 
   if (isLoading) {
     return (
-      <div className="wrap section-tight">
+      <div className="wrap admin-section">
         <p className="eyebrow">Checking session…</p>
       </div>
     );
@@ -773,16 +813,18 @@ function AdminInner() {
 
   if (!isAuthenticated) {
     return (
-      <div className="wrap section">
-        <header style={{ marginBottom: 28 }}>
-          <p className="eyebrow">Private</p>
-          <h1 className="display" style={{ fontSize: "clamp(2rem, 4vw, 3rem)", margin: "8px 0 0" }}>
-            Content admin
-          </h1>
-          <p style={{ color: "var(--muted)", maxWidth: 560, marginTop: 12 }}>
-            Sign in with Convex Auth (email + password). If your deployment sets{" "}
-            <code className="mono">ADMIN_EMAIL</code>, only that address can save content.
-          </p>
+      <div className="wrap admin-section">
+        <header className="admin-header-row" style={{ marginBottom: 0 }}>
+          <div>
+            <p className="eyebrow">Private</p>
+            <h1 className="display" style={{ fontSize: "clamp(2rem, 4vw, 3rem)", margin: "8px 0 0" }}>
+              Content admin
+            </h1>
+            <p style={{ color: "var(--muted)", maxWidth: 560, marginTop: 12 }}>
+              Sign in with Convex Auth (email + password). If your deployment sets{" "}
+              <code className="mono">ADMIN_EMAIL</code>, only that address can save content.
+            </p>
+          </div>
         </header>
         <AdminSignIn />
       </div>
@@ -795,7 +837,7 @@ function AdminInner() {
 export default function ContentAdmin() {
   if (!hasConvex() || !convexClient) {
     return (
-      <div className="wrap section">
+      <div className="wrap admin-section">
         <h1 className="display" style={{ fontSize: "2rem" }}>
           Convex not configured
         </h1>
