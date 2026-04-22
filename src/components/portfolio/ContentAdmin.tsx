@@ -121,8 +121,7 @@ function AdminSignIn() {
   );
 }
 
-function AdminInner() {
-  const { isLoading, isAuthenticated } = useConvexAuth();
+function AdminWorkspace() {
   const { signOut } = useAuthActions();
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -180,32 +179,6 @@ function AdminInner() {
       setError(err instanceof Error ? err.message : String(err));
     }
   };
-
-  if (isLoading) {
-    return (
-      <div className="wrap section-tight">
-        <p className="eyebrow">Checking session…</p>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return (
-      <div className="wrap section">
-        <header style={{ marginBottom: 28 }}>
-          <p className="eyebrow">Private</p>
-          <h1 className="display" style={{ fontSize: "clamp(2rem, 4vw, 3rem)", margin: "8px 0 0" }}>
-            Content admin
-          </h1>
-          <p style={{ color: "var(--muted)", maxWidth: 560, marginTop: 12 }}>
-            Sign in with Convex Auth (email + password). If your deployment sets{" "}
-            <code className="mono">ADMIN_EMAIL</code>, only that address can save content.
-          </p>
-        </header>
-        <AdminSignIn />
-      </div>
-    );
-  }
 
   if (posts === undefined || projects === undefined || contacts === undefined || resumePdf === undefined) {
     return (
@@ -754,6 +727,38 @@ function AdminInner() {
       )}
     </div>
   );
+}
+
+function AdminInner() {
+  const { isLoading, isAuthenticated } = useConvexAuth();
+
+  if (isLoading) {
+    return (
+      <div className="wrap section-tight">
+        <p className="eyebrow">Checking session…</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="wrap section">
+        <header style={{ marginBottom: 28 }}>
+          <p className="eyebrow">Private</p>
+          <h1 className="display" style={{ fontSize: "clamp(2rem, 4vw, 3rem)", margin: "8px 0 0" }}>
+            Content admin
+          </h1>
+          <p style={{ color: "var(--muted)", maxWidth: 560, marginTop: 12 }}>
+            Sign in with Convex Auth (email + password). If your deployment sets{" "}
+            <code className="mono">ADMIN_EMAIL</code>, only that address can save content.
+          </p>
+        </header>
+        <AdminSignIn />
+      </div>
+    );
+  }
+
+  return <AdminWorkspace />;
 }
 
 export default function ContentAdmin() {
