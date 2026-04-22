@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
-import type { Post, Project } from "../../data/portfolio";
+import type { Post, Project } from "../../data/portfolioContent";
 import { convexClient, hasConvex } from "../../lib/convexClient";
 
 function linesToBody(s: string): string[] {

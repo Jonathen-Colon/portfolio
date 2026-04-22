@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import type { Post } from '../../data/portfolio';
+import type { Post } from '../../data/portfolioContent';
 
 // ─── PRNG ─────────────────────────────────────────────────────────────────────
 

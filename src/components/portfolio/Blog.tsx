@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Post } from '../../data/portfolio';
+import type { Post } from '../../data/portfolioContent';
 import { ThumbPost } from './Thumbnails';
 
 function EmptyDevlog({ message }: { message: string }) {

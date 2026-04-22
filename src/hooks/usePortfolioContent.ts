@@ -1,7 +1,7 @@
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Doc } from "../../convex/_generated/dataModel";
-import type { Post, Project } from "../data/portfolio";
+import type { Post, Project } from "../data/portfolioContent";
 import { hasConvex } from "../lib/convexClient";
 
 function docToProject(d: Doc<"projects">): Project {

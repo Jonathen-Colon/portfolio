@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import type { Post, Project } from '../../data/portfolio';
+import type { Post, Project } from '../../data/portfolioContent';
 import { ProjectThumb, ThumbPost } from './Thumbnails';
 
 /** Open in a new tab; add https:// when the URL has no scheme (e.g. admin-pasted domains). */

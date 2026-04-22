@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Post, Project } from '../../data/portfolio';
+import type { Post, Project } from '../../data/portfolioContent';
 import { Hero } from './Hero';
 import { MarqueeStrip } from './Marquee';
 import { FeaturedWork } from './Work';

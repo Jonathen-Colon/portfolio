@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import {
-  resume as resumeContent,
-} from '../../data/portfolio';
-import type { Post, Project } from '../../data/portfolio';
+import { resume as resumeContent } from '../../data/portfolio';
+import type { Post, Project } from '../../data/portfolioContent';
 import { sitePageTitle } from '../../data/sitePages';
 import { useFinePointer, useNeedClickNavMenu } from './hooks';
 import {

@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Project } from '../../data/portfolio';
+import type { Project } from '../../data/portfolioContent';
 import { ProjectThumb } from './Thumbnails';
 
 function EmptyState({ title, body }: { title: string; body: string }) {

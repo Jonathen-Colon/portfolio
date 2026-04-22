@@ -19,7 +19,7 @@ export function ResumePage({
             <div className="section-num">08 / resume</div>
             <h2 className="section-title display">CV</h2>
             <p style={{ maxWidth: 540, color: 'var(--ink-soft)', margin: '14px 0 0' }}>
-              The condensed version. {resumePdfUrl ? 'Download the latest PDF below.' : 'PDF upload can be managed from admin.'}
+              The condensed version. {resumePdfUrl ? 'Download the latest PDF below.' : ''}
             </p>
           </div>
           {resumePdfUrl ? (
@@ -27,9 +27,10 @@ export function ResumePage({
               Download PDF <span>↓</span>
             </a>
           ) : (
-            <button className="btn btn-lime" type="button" disabled title="Upload a CV PDF from /admin">
-              Download PDF <span>↓</span>
-            </button>
+            // <button className="btn btn-lime" type="button" disabled title="Upload a CV PDF from /admin">
+            //   Download PDF <span>↓</span>
+            // </button>
+            "No download available yet"
           )}
         </div>
         <div className="card flat resume-card-inner">
@@ -49,21 +50,6 @@ export function ResumePage({
             </div>
           ))}
           <h3 className="eyebrow" style={{ margin: '32px 0 6px' }}>
-            Speaking
-          </h3>
-          {resume.speaking.map((r, i) => (
-            <div key={i} className="resume-row">
-              <div className="resume-yr">{r.year}</div>
-              <div>
-                <div className="resume-title">{r.title}</div>
-                <div className="resume-org">{r.org}</div>
-              </div>
-              <div className="resume-tag">
-                <span className="pill">Talk</span>
-              </div>
-            </div>
-          ))}
-          <h3 className="eyebrow" style={{ margin: '32px 0 6px' }}>
             Education
           </h3>
           {resume.education.map((r, i) => (
@@ -74,7 +60,7 @@ export function ResumePage({
                 <div className="resume-org">{r.org}</div>
               </div>
               <div className="resume-tag">
-                <span className="pill">BFA</span>
+                <span className="pill">AS</span>
               </div>
             </div>
           ))}
