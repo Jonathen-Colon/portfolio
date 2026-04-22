@@ -27,14 +27,6 @@ export interface Post {
   body: string[];
 }
 
-export interface NowItem {
-  title: string;
-  body: string;
-  progress: number | null;
-  color: string;
-  icon: string;
-}
-
 export interface ResumeRow {
   title: string;
   org: string;
@@ -240,37 +232,6 @@ export const posts: Post[] = [
       'GDScript is fine once you stop trying to write it like C#. The node system clicked after about two weeks.',
       'Lattice and Moth are both Godot 4 now. Thicket stays in Unity because the port cost is not worth it.',
     ],
-  },
-];
-
-export const nowItems: NowItem[] = [
-  {
-    title: 'Lattice — wrapping up',
-    body: 'Final 8 levels drafted. In playtest now. Targeting a May itch.io release.',
-    progress: 78,
-    color: 'mint',
-    icon: '◇',
-  },
-  {
-    title: 'Reading: A Pattern Language',
-    body: 'Taking my time with it. The density is the point.',
-    progress: null,
-    color: 'sun',
-    icon: '📖',
-  },
-  {
-    title: 'Portfolio stack',
-    body: 'Trimmed external services so the site is easier to reason about and ship.',
-    progress: 90,
-    color: 'cobalt',
-    icon: '⬡',
-  },
-  {
-    title: 'Available for work',
-    body: 'Taking 1–2 new projects starting May 2026. Best for weird briefs.',
-    progress: null,
-    color: 'red',
-    icon: '★',
   },
 ];
 

@@ -429,14 +429,19 @@ button { font-family: inherit; cursor: pointer; }
 }
 .cursor-hot .cursor-dot { width: 28px; height: 28px; background: var(--lime); }
 .cursor-hot .cursor-ring { width: 56px; height: 56px; }
-/* Same breakpoint as PortfolioApp custom cursor: hide native pointer */
+/*
+ * Hide the native pointer only when the portfolio shell mounts the custom cursor
+ * (see PortfolioApp: data-jc-cursor="custom"). Other routes (e.g. /admin) keep a normal cursor.
+ */
 @media (hover: hover) and (pointer: fine) {
-  html, body, body * {
+  html[data-jc-cursor="custom"],
+  html[data-jc-cursor="custom"] body,
+  html[data-jc-cursor="custom"] body * {
     cursor: none !important;
   }
-  .form-field input,
-  .form-field textarea,
-  .form-field select {
+  html[data-jc-cursor="custom"] .form-field input,
+  html[data-jc-cursor="custom"] .form-field textarea,
+  html[data-jc-cursor="custom"] .form-field select {
     cursor: text !important;
   }
 }
@@ -451,19 +456,6 @@ button { font-family: inherit; cursor: pointer; }
 .fact { display: grid; grid-template-columns: 120px 1fr; gap: 18px; padding: 12px 0; border-bottom: 2px dashed var(--line); align-items: baseline; }
 .fact-k { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
 .fact-v { font-weight: 500; }
-
-.now-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-.now-card { border: 2px solid var(--line); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 14px; background: var(--bg); }
-.now-card.big { grid-column: span 2; }
-.now-card.red { background: var(--red); color: #fff; }
-.now-card.lime { background: var(--lime); color: var(--ink); }
-.now-card.cobalt { background: var(--cobalt); color: #fff; }
-.now-card.plum { background: var(--plum); color: #fff; }
-.now-card.sun { background: var(--sun); color: var(--ink); }
-.now-card.mint { background: var(--mint); color: var(--ink); }
-.now-icon { width: 44px; height: 44px; border: 2px solid var(--line); background: var(--bg); border-radius: 12px; display: grid; place-items: center; font-size: 22px; color: var(--ink); }
-.progress { height: 14px; border: 2px solid var(--line); border-radius: 999px; background: var(--bg); overflow: hidden; }
-.progress-bar { height: 100%; background: var(--ink); border-right: 2px solid var(--line); }
 
 .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
 .form-field { display: grid; gap: 6px; margin-bottom: 16px; }
@@ -535,7 +527,7 @@ button { font-family: inherit; cursor: pointer; }
 .th.plum-solid { background: var(--plum); }
 .th.lime-solid { background: var(--lime); }
 
-/* Tablet / narrow desktop: keep 2-column work + now grids; stack complex rows */
+/* Tablet / narrow desktop: keep 2-column work grids; stack complex rows */
 @media (max-width: 980px) {
   :root { --page-gutter: 22px; }
   .section { padding-block: 72px; }
@@ -546,8 +538,6 @@ button { font-family: inherit; cursor: pointer; }
   .devlog-entry { grid-template-columns: 1fr; gap: 8px; }
   .devlog-thumb { width: 100%; height: 160px; justify-self: stretch; }
   .about-grid { grid-template-columns: 1fr; }
-  .now-grid { grid-template-columns: repeat(2, 1fr); }
-  .now-card.big { grid-column: span 2; }
   .contact-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
   .resume-row { grid-template-columns: 1fr; }
@@ -567,8 +557,6 @@ button { font-family: inherit; cursor: pointer; }
   .section { padding-block: 56px; }
   .section-head { margin-bottom: 28px; }
   .work-grid { grid-template-columns: 1fr; gap: 20px; }
-  .now-grid { grid-template-columns: 1fr; }
-  .now-card.big { grid-column: span 1; }
   .footer-grid { grid-template-columns: 1fr; }
   .hero-side { grid-template-columns: 1fr; }
   .fact { grid-template-columns: 1fr; gap: 6px; }
