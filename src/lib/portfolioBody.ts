@@ -109,7 +109,10 @@ export function sanitizePortfolioBodyHtml(html: string): string {
   return DOMPurify.sanitize(html, SANITIZE);
 }
 
-/** HTML for dangerouslySetInnerHTML in modals. */
+/**
+ * HTML for dangerouslySetInnerHTML in modals.
+ * `string[]` is treated as plain paragraphs (no inline HTML). `string` is full rich HTML from the admin editor.
+ */
 export function bodyToDisplayHtml(body: string[] | string | undefined): string {
   if (body === undefined || body === null) return "";
   const raw = typeof body === "string" ? body : paragraphsToHtml(body);
