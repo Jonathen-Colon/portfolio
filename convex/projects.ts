@@ -15,9 +15,9 @@ const projectValue = v.object({
   live: v.optional(v.string()),
   repo: v.optional(v.string()),
   itch: v.optional(v.string()),
-  media: v.optional(v.string()),
-  body: v.array(v.string()),
-  shots: v.optional(v.array(v.string())),
+    media: v.optional(v.string()),
+    body: v.union(v.array(v.string()), v.string()),
+    shots: v.optional(v.array(v.string())),
 });
 
 export const listProjects = query({

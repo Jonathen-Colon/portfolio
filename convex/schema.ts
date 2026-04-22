@@ -26,7 +26,7 @@ export default defineSchema({
     repo: v.optional(v.string()),
     itch: v.optional(v.string()),
     media: v.optional(v.string()),
-    body: v.array(v.string()),
+    body: v.union(v.array(v.string()), v.string()),
     shots: v.optional(v.array(v.string())),
   })
     .index("by_project_id", ["id"])
@@ -40,7 +40,7 @@ export default defineSchema({
     read: v.string(),
     tag: v.string(),
     thumb: v.string(),
-    body: v.array(v.string()),
+    body: v.union(v.array(v.string()), v.string()),
   }).index("by_post_id", ["id"]),
 
   siteSettings: defineTable({

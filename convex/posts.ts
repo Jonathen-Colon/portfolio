@@ -10,7 +10,7 @@ const postValue = v.object({
   read: v.string(),
   tag: v.string(),
   thumb: v.string(),
-  body: v.array(v.string()),
+  body: v.union(v.array(v.string()), v.string()),
 });
 
 export const listPosts = query({
