@@ -1,5 +1,5 @@
 import { ConvexAuthProvider, useAuthActions } from "@convex-dev/auth/react";
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { Component, useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
@@ -22,6 +22,50 @@ function formatAuthError(err: unknown): string {
     return err.message;
   }
   return String(err);
+}
+
+type AdminErrorBoundaryProps = { signOut: () => void; children: ReactNode };
+type AdminErrorBoundaryState = { error: Error | null };
+
+class AdminErrorBoundary extends Component<AdminErrorBoundaryProps, AdminErrorBoundaryState> {
+  state: AdminErrorBoundaryState = { error: null };
+
+  static getDerivedStateFromError(error: Error): AdminErrorBoundaryState {
+    return { error };
+  }
+
+  render() {
+    if (this.state.error) {
+      return (
+        <div className="wrap section">
+          <header style={{ marginBottom: 28 }}>
+            <p className="eyebrow">Private</p>
+            <h1 className="display" style={{ fontSize: "clamp(2rem, 4vw, 3rem)", margin: "8px 0 0" }}>
+              Content admin
+            </h1>
+          </header>
+          <div className="card flat" style={{ padding: 24, maxWidth: 640 }}>
+            <p className="mono" style={{ color: "var(--red)", marginBottom: 12 }}>
+              {this.state.error.message}
+            </p>
+            <p style={{ color: "var(--muted)", marginBottom: 20 }}>
+              This usually means the browser is talking to a different Convex deployment than the one your functions
+              were pushed to, or a query failed on the server. After deploying Convex, reload this page.
+            </p>
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+              <button type="button" className="btn" onClick={() => this.setState({ error: null })}>
+                Try again
+              </button>
+              <button type="button" className="btn btn-ghost" onClick={() => this.props.signOut()}>
+                Sign out
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
 }
 
 function AdminSignIn() {
@@ -121,8 +165,8 @@ function AdminSignIn() {
   );
 }
 
-function AdminInner() {
-  const { isLoading, isAuthenticated } = useConvexAuth();
+/** Convex `useQuery` throws on server errors; keep hooks out of the unauthenticated tree so the login form never crashes. */
+function AdminAuthenticated() {
   const { signOut } = useAuthActions();
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -180,32 +224,6 @@ function AdminInner() {
       setError(err instanceof Error ? err.message : String(err));
     }
   };
-
-  if (isLoading) {
-    return (
-      <div className="wrap section-tight">
-        <p className="eyebrow">Checking session…</p>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return (
-      <div className="wrap section">
-        <header style={{ marginBottom: 28 }}>
-          <p className="eyebrow">Private</p>
-          <h1 className="display" style={{ fontSize: "clamp(2rem, 4vw, 3rem)", margin: "8px 0 0" }}>
-            Content admin
-          </h1>
-          <p style={{ color: "var(--muted)", maxWidth: 560, marginTop: 12 }}>
-            Sign in with Convex Auth (email + password). If your deployment sets{" "}
-            <code className="mono">ADMIN_EMAIL</code>, only that address can save content.
-          </p>
-        </header>
-        <AdminSignIn />
-      </div>
-    );
-  }
 
   if (
     posts === undefined ||
@@ -787,6 +805,43 @@ function AdminInner() {
         </div>
       )}
     </div>
+  );
+}
+
+function AdminInner() {
+  const { isLoading, isAuthenticated } = useConvexAuth();
+  const { signOut } = useAuthActions();
+
+  if (isLoading) {
+    return (
+      <div className="wrap section-tight">
+        <p className="eyebrow">Checking session…</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="wrap section">
+        <header style={{ marginBottom: 28 }}>
+          <p className="eyebrow">Private</p>
+          <h1 className="display" style={{ fontSize: "clamp(2rem, 4vw, 3rem)", margin: "8px 0 0" }}>
+            Content admin
+          </h1>
+          <p style={{ color: "var(--muted)", maxWidth: 560, marginTop: 12 }}>
+            Sign in with Convex Auth (email + password). If your deployment sets{" "}
+            <code className="mono">ADMIN_EMAIL</code>, only that address can save content.
+          </p>
+        </header>
+        <AdminSignIn />
+      </div>
+    );
+  }
+
+  return (
+    <AdminErrorBoundary signOut={() => void signOut()}>
+      <AdminAuthenticated />
+    </AdminErrorBoundary>
   );
 }
 
