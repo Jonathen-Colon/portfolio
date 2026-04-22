@@ -506,6 +506,45 @@ button { font-family: inherit; cursor: pointer; }
 .admin-body-meta {
   font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: 0.06em;
 }
+/* Legacy paragraph-editor layout (unused with TipTap; kept for any future reuse) */
+.admin-body-editor {
+  display: grid;
+  gap: 12px;
+}
+.admin-body-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: start;
+}
+.admin-body-idx {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  padding-top: 14px;
+  min-width: 1.75rem;
+  text-align: right;
+}
+.admin-body-row textarea {
+  min-height: 100px;
+  resize: vertical;
+  font-size: 16px;
+  line-height: 1.55;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+@media (max-width: 639px) {
+  .admin-body-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .admin-body-idx {
+    text-align: left;
+    padding-top: 0;
+  }
+}
 .admin-rich-editor-wrap {
   border: 2px solid var(--line); border-radius: 12px; background: var(--bg);
   overflow: hidden; max-width: 100%;
