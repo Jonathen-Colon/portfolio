@@ -28,7 +28,7 @@ export function WorkCard({ project, onClick, i }: { project: Project; onClick: (
         <span className={`pill ${project.accent}`}>{project.year}</span>
       </div>
       <div className="work-thumb">
-        <ProjectThumb id={project.id} />
+        <ProjectThumb id={project.id} media={project.media} />
       </div>
       <div className="work-meta">
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'space-between' }}>

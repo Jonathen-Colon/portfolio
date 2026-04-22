@@ -163,7 +163,25 @@ const THUMB_MAP: Record<string, () => ReactElement> = {
   thicket: ThumbThicket,
 };
 
-export function ProjectThumb({ id }: { id: string }) {
+/** Absolute URL for <img src>; add https:// when there is no scheme (e.g. admin-pasted domains). */
+function mediaImageSrc(raw: string | undefined): string | null {
+  const t = raw?.trim();
+  if (!t) return null;
+  if (/^https?:\/\//i.test(t)) return t;
+  return `https://${t}`;
+}
+
+export function ProjectThumb({ id, media }: { id: string; media?: string }) {
+  const src = mediaImageSrc(media);
+  if (src) {
+    return (
+      <img
+        src={src}
+        alt=""
+        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+      />
+    );
+  }
   const Component = THUMB_MAP[id];
   if (!Component) return <div className="th cobalt-solid" style={{ width: '100%', height: '100%' }} />;
   return <Component />;

@@ -29,7 +29,7 @@ export function ProjectModal({ project, onClose }: { project: Project; onClose: 
           ✕
         </button>
         <div className="modal-hero">
-          <ProjectThumb id={project.id} />
+          <ProjectThumb id={project.id} media={project.media} />
         </div>
         <div className="modal-body">
           <div style={{ display: 'flex', gap: 8, marginBottom: 14, flexWrap: 'wrap' }}>
