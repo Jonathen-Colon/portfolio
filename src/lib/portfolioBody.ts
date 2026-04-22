@@ -36,46 +36,15 @@ function isEmptyBodyHtml(html: string): boolean {
   return !text && !hasImg;
 }
 
-/** True when body is only top-level `<p>` with text and/or `<br>` (no inline elements). */
-function isSimpleParagraphOnly(html: string): boolean {
-  const doc = new DOMParser().parseFromString(html, "text/html");
-  for (const node of doc.body.childNodes) {
-    if (node.nodeType === Node.TEXT_NODE) {
-      if ((node.textContent ?? "").trim()) return false;
-      continue;
-    }
-    if (node.nodeName !== "P") return false;
-    for (const c of (node as HTMLParagraphElement).childNodes) {
-      if (c.nodeType === Node.TEXT_NODE) continue;
-      if (c.nodeName === "BR") continue;
-      return false;
-    }
-  }
-  return true;
-}
-
-function simpleParagraphsFromHtml(html: string): string[] {
-  const doc = new DOMParser().parseFromString(html, "text/html");
-  return [...doc.body.querySelectorAll("p")]
-    .map((p) => p.innerHTML.replace(/<br\s*\/?>/gi, "\n"))
-    .map((raw) => {
-      const t = new DOMParser().parseFromString(`<div>${raw}</div>`, "text/html").body.textContent ?? "";
-      return t.replace(/\r\n/g, "\n").trim();
-    })
-    .filter(Boolean);
-}
-
 /**
- * Normalizes editor HTML for Convex: compact `string[]` when plain paragraphs only,
- * otherwise full HTML string (headings, lists, images, bold, etc.).
+ * Normalizes editor HTML for Convex. Always stores non-empty rich content as an HTML string
+ * so inline marks (bold, links, …) inside paragraphs are preserved. Empty editor → `[]`.
+ * Legacy `string[]` in the DB is still read via `bodyToHtmlForEditor` / `bodyToDisplayHtml`.
  */
 export function editorHtmlToStorageBody(html: string): string[] | string {
   const trimmed = html.trim();
   if (!trimmed || isEmptyBodyHtml(trimmed)) return [];
-  if (isSimpleParagraphOnly(trimmed)) {
-    return simpleParagraphsFromHtml(trimmed);
-  }
-  return trimmed;
+  return sanitizePortfolioBodyHtml(trimmed);
 }
 
 const SANITIZE: DOMPurify.Config = {

@@ -229,9 +229,7 @@ export function AdminRichBodyEditor({
         ) : null}
         <EditorContent editor={editor} />
       </div>
-      <p className="admin-body-meta">
-        Plain paragraphs save compactly; headings, lists, links, and images save as HTML.
-      </p>
+      <p className="admin-body-meta">Saved as sanitized HTML so bold, links, and images show correctly on the site.</p>
     </div>
   );
 }
