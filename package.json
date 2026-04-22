@@ -19,13 +19,22 @@
     "@convex-dev/auth": "^0.0.91",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/postcss": "^4.2.4",
+    "@tiptap/extension-image": "^3.22.4",
+    "@tiptap/extension-link": "^3.22.4",
+    "@tiptap/extension-placeholder": "^3.22.4",
+    "@tiptap/react": "^3.22.4",
+    "@tiptap/starter-kit": "^3.22.4",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "astro": "^6.1.8",
     "convex": "^1.35.1",
+    "dompurify": "^3.4.1",
     "jose": "^6.2.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "tailwindcss": "^4.2.4"
+  },
+  "devDependencies": {
+    "@types/dompurify": "^3.0.5"
   }
 }

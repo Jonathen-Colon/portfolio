@@ -12,6 +12,23 @@ export const generateResumeUploadUrl = mutation({
   },
 });
 
+/** Admin-only: upload images embedded in post/project body HTML. */
+export const generateBodyImageUploadUrl = mutation({
+  args: {},
+  handler: async (ctx) => {
+    await requireContentAdmin(ctx);
+    return await ctx.storage.generateUploadUrl();
+  },
+});
+
+/** Public URL for a stored image (used in saved body HTML). */
+export const getBodyImageUrl = query({
+  args: { storageId: v.id("_storage") },
+  handler: async (ctx, { storageId }) => {
+    return (await ctx.storage.getUrl(storageId)) ?? null;
+  },
+});
+
 export const setResumePdf = mutation({
   args: {
     storageId: v.id("_storage"),

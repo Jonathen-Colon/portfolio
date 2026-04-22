@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import type { Post, Project } from '../../data/portfolioContent';
+import { bodyToDisplayHtml } from '../../lib/portfolioBody';
 import { ProjectThumb, ThumbPost } from './Thumbnails';
 
 /** Open in a new tab; add https:// when the URL has no scheme (e.g. admin-pasted domains). */
@@ -41,11 +42,10 @@ export function ProjectModal({ project, onClose }: { project: Project; onClose: 
             {project.title}
           </h2>
           <p style={{ fontSize: 18, color: 'var(--ink-soft)', margin: '0 0 24px' }}>{project.desc}</p>
-          {project.body.map((p, i) => (
-            <p key={i} style={{ fontSize: 16, lineHeight: 1.65, color: 'var(--ink-soft)' }}>
-              {p}
-            </p>
-          ))}
+          <div
+            className="modal-body-html"
+            dangerouslySetInnerHTML={{ __html: bodyToDisplayHtml(project.body) }}
+          />
           {project.shots && (
             <div className="modal-shots-grid">
               {project.shots.map((s, i) => (
@@ -141,11 +141,10 @@ export function PostModal({ post, onClose }: { post: Post; onClose: () => void }
             {post.title}
           </h2>
           <p style={{ fontSize: 20, lineHeight: 1.5, color: 'var(--ink-soft)', fontWeight: 500, margin: '0 0 24px' }}>{post.excerpt}</p>
-          {post.body.map((p, i) => (
-            <p key={i} style={{ fontSize: 17, lineHeight: 1.7, color: 'var(--ink-soft)' }}>
-              {p}
-            </p>
-          ))}
+          <div
+            className="modal-body-html"
+            dangerouslySetInnerHTML={{ __html: bodyToDisplayHtml(post.body) }}
+          />
           <div
             style={{
               marginTop: 32,

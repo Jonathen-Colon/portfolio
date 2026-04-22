@@ -12,7 +12,8 @@ export interface Project {
   repo?: string;
   itch?: string;
   media?: string;
-  body: string[];
+  /** Legacy: one paragraph per string. Rich: full HTML (from admin editor). */
+  body: string[] | string;
   shots?: string[];
 }
 
@@ -24,7 +25,8 @@ export interface Post {
   read: string;
   tag: string;
   thumb: string;
-  body: string[];
+  /** Legacy: one paragraph per string. Rich: full HTML (from admin editor). */
+  body: string[] | string;
 }
 
 export const webProjects: Project[] = [
