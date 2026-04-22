@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { requireContentAdmin } from "./lib/admin";
+import { checkContentAdmin, requireContentAdmin } from "./lib/admin";
 
 const contactKindValue = v.union(
   v.literal("Project inquiry"),
@@ -38,7 +38,11 @@ export const submitContact = mutation({
 export const listContactsAdmin = query({
   args: {},
   handler: async (ctx) => {
-    await requireContentAdmin(ctx);
-    return await ctx.db.query("contacts").withIndex("by_submitted_at").order("desc").take(250);
+    const gate = await checkContentAdmin(ctx);
+    if (!gate.ok) {
+      return { ok: false as const, error: gate.message };
+    }
+    const contacts = await ctx.db.query("contacts").withIndex("by_submitted_at").order("desc").take(250);
+    return { ok: true as const, contacts };
   },
 });

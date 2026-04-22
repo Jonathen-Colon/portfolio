@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { requireContentAdmin } from "./lib/admin";
+import { checkContentAdmin, requireContentAdmin } from "./lib/admin";
 
 const RESUME_SETTINGS_KEY = "resume";
 
@@ -70,21 +70,27 @@ export const getResumePdf = query({
 export const getResumePdfAdmin = query({
   args: {},
   handler: async (ctx) => {
-    await requireContentAdmin(ctx);
+    const gate = await checkContentAdmin(ctx);
+    if (!gate.ok) {
+      return { ok: false as const, error: gate.message };
+    }
     const settings = await ctx.db
       .query("siteSettings")
       .withIndex("by_key", (q) => q.eq("key", RESUME_SETTINGS_KEY))
       .unique();
     if (!settings?.resumeFileId) {
-      return null;
+      return { ok: true as const, resume: null };
     }
     const url = await ctx.storage.getUrl(settings.resumeFileId);
     return {
-      url,
-      filename: settings.resumeFileName ?? "resume.pdf",
-      contentType: settings.resumeContentType ?? null,
-      size: settings.resumeSize ?? null,
-      uploadedAt: settings.resumeUploadedAt ?? null,
+      ok: true as const,
+      resume: {
+        url,
+        filename: settings.resumeFileName ?? "resume.pdf",
+        contentType: settings.resumeContentType ?? null,
+        size: settings.resumeSize ?? null,
+        uploadedAt: settings.resumeUploadedAt ?? null,
+      },
     };
   },
 });

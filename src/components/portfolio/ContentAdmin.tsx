@@ -129,8 +129,8 @@ function AdminInner() {
 
   const posts = useQuery(api.posts.listPosts, {});
   const projects = useQuery(api.projects.listProjects, {});
-  const contacts = useQuery(api.contacts.listContactsAdmin, {});
-  const resumePdf = useQuery(api.assets.getResumePdfAdmin, {});
+  const contactsResult = useQuery(api.contacts.listContactsAdmin, {});
+  const resumePdfResult = useQuery(api.assets.getResumePdfAdmin, {});
   const upsertPost = useMutation(api.posts.upsertPost);
   const upsertProject = useMutation(api.projects.upsertProject);
   const deletePost = useMutation(api.posts.deletePost);
@@ -207,13 +207,47 @@ function AdminInner() {
     );
   }
 
-  if (posts === undefined || projects === undefined || contacts === undefined || resumePdf === undefined) {
+  if (
+    posts === undefined ||
+    projects === undefined ||
+    contactsResult === undefined ||
+    resumePdfResult === undefined
+  ) {
     return (
       <div className="wrap section-tight">
         <p className="eyebrow">Loading…</p>
       </div>
     );
   }
+
+  if (!contactsResult.ok || !resumePdfResult.ok) {
+    const detail = !contactsResult.ok ? contactsResult.error : resumePdfResult.error;
+    return (
+      <div className="wrap section">
+        <header style={{ marginBottom: 28 }}>
+          <p className="eyebrow">Private</p>
+          <h1 className="display" style={{ fontSize: "clamp(2rem, 4vw, 3rem)", margin: "8px 0 0" }}>
+            Content admin
+          </h1>
+        </header>
+        <div className="card flat" style={{ padding: 24, maxWidth: 560 }}>
+          <p className="mono" style={{ color: "var(--red)", marginBottom: 16 }}>
+            {detail}
+          </p>
+          <p style={{ color: "var(--muted)", marginBottom: 20 }}>
+            If your deployment sets <code className="mono">ADMIN_EMAIL</code>, sign in with that exact email address,
+            or update the env var to match your Convex Auth account.
+          </p>
+          <button type="button" className="btn" onClick={() => void signOut()}>
+            Sign out
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const contacts = contactsResult.contacts;
+  const resumePdf = resumePdfResult.resume;
 
   return (
     <div className="wrap section">
