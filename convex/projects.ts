@@ -1,6 +1,9 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { requireContentAdmin } from "./lib/admin";
+import { normalizeBody } from "./lib/normalizeBody";
+
+const bodyArg = v.union(v.string(), v.array(v.string()));
 
 const projectValue = v.object({
   id: v.string(),
@@ -15,9 +18,15 @@ const projectValue = v.object({
   live: v.optional(v.string()),
   repo: v.optional(v.string()),
   itch: v.optional(v.string()),
+<<<<<<< HEAD
     media: v.optional(v.string()),
     body: v.union(v.array(v.string()), v.string()),
     shots: v.optional(v.array(v.string())),
+=======
+  media: v.optional(v.string()),
+  body: bodyArg,
+  shots: v.optional(v.array(v.string())),
+>>>>>>> 33ef075 (Enhance body normalization for posts and projects)
 });
 
 export const listProjects = query({
@@ -43,15 +52,16 @@ export const upsertProject = mutation({
   },
   handler: async (ctx, { project }) => {
     await requireContentAdmin(ctx);
+    const row = { ...project, body: normalizeBody(project.body) };
     const existing = await ctx.db
       .query("projects")
       .withIndex("by_project_id", (q) => q.eq("id", project.id))
       .unique();
     if (existing) {
-      await ctx.db.patch(existing._id, project);
+      await ctx.db.patch(existing._id, row);
       return existing._id;
     }
-    return await ctx.db.insert("projects", project);
+    return await ctx.db.insert("projects", row);
   },
 });
 

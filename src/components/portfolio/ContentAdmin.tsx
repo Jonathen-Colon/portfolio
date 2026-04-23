@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react
 import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
+import { normalizeBody } from "../../../convex/lib/normalizeBody";
 import type { Post, Project } from "../../data/portfolioContent";
 import { convexClient, hasConvex } from "../../lib/convexClient";
 import { AdminRichBodyEditor } from "./AdminRichBodyEditor";
@@ -12,11 +13,16 @@ function tagsToDraft(tags: string[] | undefined): string {
   return (tags ?? []).join(", ");
 }
 
+<<<<<<< HEAD
 function draftToTags(s: string): string[] {
   return s
     .split(",")
     .map((t) => t.trim())
     .filter(Boolean);
+=======
+function bodyToLines(body: string[] | string | undefined): string {
+  return normalizeBody(body).join("\n");
+>>>>>>> 33ef075 (Enhance body normalization for posts and projects)
 }
 
 function formatAuthError(err: unknown): string {
@@ -160,7 +166,7 @@ function AdminWorkspace() {
       setPostForm({});
       return;
     }
-    setPostForm({ ...selectedPost });
+    setPostForm({ ...selectedPost, body: normalizeBody(selectedPost.body as string | string[]) });
   }, [selectedPost]);
 
   useEffect(() => {
@@ -168,7 +174,10 @@ function AdminWorkspace() {
       setProjectForm({});
       return;
     }
-    setProjectForm({ ...selectedProject });
+    setProjectForm({
+      ...selectedProject,
+      body: normalizeBody(selectedProject.body as string | string[]),
+    });
   }, [selectedProject]);
 
   useEffect(() => {
@@ -370,7 +379,7 @@ function AdminWorkspace() {
                               read: p.read ?? "",
                               tag: p.tag ?? "",
                               thumb: p.thumb ?? "",
-                              body: p.body ?? [],
+                              body: normalizeBody(p.body as string | string[] | undefined),
                             },
                           }),
                         "Post saved.",
@@ -590,7 +599,7 @@ function AdminWorkspace() {
                         tags: p.tags ?? [],
                         accent: p.accent ?? "",
                         thumb: p.thumb ?? "",
-                        body: p.body ?? [],
+                        body: normalizeBody(p.body as string | string[] | undefined),
                         live: p.live?.trim() || undefined,
                         repo: p.repo?.trim() || undefined,
                         itch: p.itch?.trim() || undefined,

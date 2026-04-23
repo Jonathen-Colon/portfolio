@@ -1,6 +1,9 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { requireContentAdmin } from "./lib/admin";
+import { normalizeBody } from "./lib/normalizeBody";
+
+const bodyArg = v.union(v.string(), v.array(v.string()));
 
 const postValue = v.object({
   id: v.string(),
@@ -10,7 +13,11 @@ const postValue = v.object({
   read: v.string(),
   tag: v.string(),
   thumb: v.string(),
+<<<<<<< HEAD
   body: v.union(v.array(v.string()), v.string()),
+=======
+  body: bodyArg,
+>>>>>>> 33ef075 (Enhance body normalization for posts and projects)
 });
 
 export const listPosts = query({
@@ -27,15 +34,16 @@ export const upsertPost = mutation({
   },
   handler: async (ctx, { post }) => {
     await requireContentAdmin(ctx);
+    const row = { ...post, body: normalizeBody(post.body) };
     const existing = await ctx.db
       .query("posts")
       .withIndex("by_post_id", (q) => q.eq("id", post.id))
       .unique();
     if (existing) {
-      await ctx.db.patch(existing._id, post);
+      await ctx.db.patch(existing._id, row);
       return existing._id;
     }
-    return await ctx.db.insert("posts", post);
+    return await ctx.db.insert("posts", row);
   },
 });
 

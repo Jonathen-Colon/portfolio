@@ -1,6 +1,7 @@
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Doc } from "../../convex/_generated/dataModel";
+import { normalizeBody } from "../../convex/lib/normalizeBody";
 import type { Post, Project } from "../data/portfolioContent";
 import { hasConvex } from "../lib/convexClient";
 
@@ -19,7 +20,7 @@ function docToProject(d: Doc<"projects">): Project {
     repo: d.repo,
     itch: d.itch,
     media: d.media,
-    body: d.body,
+    body: normalizeBody(d.body as string | string[]),
     shots: d.shots,
   };
 }
@@ -33,7 +34,7 @@ function docToPost(d: Doc<"posts">): Post {
     read: d.read,
     tag: d.tag,
     thumb: d.thumb,
-    body: d.body,
+    body: normalizeBody(d.body as string | string[]),
   };
 }
 
