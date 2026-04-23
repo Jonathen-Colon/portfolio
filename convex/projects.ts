@@ -18,15 +18,9 @@ const projectValue = v.object({
   live: v.optional(v.string()),
   repo: v.optional(v.string()),
   itch: v.optional(v.string()),
-<<<<<<< HEAD
-    media: v.optional(v.string()),
-    body: v.union(v.array(v.string()), v.string()),
-    shots: v.optional(v.array(v.string())),
-=======
   media: v.optional(v.string()),
   body: bodyArg,
   shots: v.optional(v.array(v.string())),
->>>>>>> 33ef075 (Enhance body normalization for posts and projects)
 });
 
 export const listProjects = query({

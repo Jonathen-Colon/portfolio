@@ -36,6 +36,8 @@ export function AdminRichBodyEditor({
     extensions: [
       StarterKit.configure({
         heading: { levels: [2, 3] },
+        // StarterKit v3 includes Link; we register Link separately with app-specific options.
+        link: false,
       }),
       Placeholder.configure({
         placeholder: "Write the full article or project story here…",

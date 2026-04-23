@@ -13,16 +13,11 @@ function tagsToDraft(tags: string[] | undefined): string {
   return (tags ?? []).join(", ");
 }
 
-<<<<<<< HEAD
 function draftToTags(s: string): string[] {
   return s
     .split(",")
     .map((t) => t.trim())
     .filter(Boolean);
-=======
-function bodyToLines(body: string[] | string | undefined): string {
-  return normalizeBody(body).join("\n");
->>>>>>> 33ef075 (Enhance body normalization for posts and projects)
 }
 
 function formatAuthError(err: unknown): string {

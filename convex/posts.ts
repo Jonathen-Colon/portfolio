@@ -13,11 +13,7 @@ const postValue = v.object({
   read: v.string(),
   tag: v.string(),
   thumb: v.string(),
-<<<<<<< HEAD
-  body: v.union(v.array(v.string()), v.string()),
-=======
   body: bodyArg,
->>>>>>> 33ef075 (Enhance body normalization for posts and projects)
 });
 
 export const listPosts = query({
