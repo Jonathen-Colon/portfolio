@@ -205,9 +205,7 @@ export default function PortfolioApp({
             }}
             style={{ cursor: 'pointer' }}
           >
-            <span className="logo-badge" aria-hidden>
-              <img src="/favicon.svg" alt="" width={128} height={128} />
-            </span>
+            <span className="logo-badge">JC</span>
             <span>
               joncolon<span style={{ color: 'var(--red)' }}>.dev</span>
             </span>
