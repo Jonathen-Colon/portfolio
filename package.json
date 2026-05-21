@@ -27,7 +27,7 @@
     "@tiptap/starter-kit": "^3.22.4",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "astro": "^6.1.8",
+    "astro": "^6.1.10",
     "convex": "^1.35.1",
     "dompurify": "^3.4.1",
     "jose": "^6.2.2",
