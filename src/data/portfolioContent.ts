@@ -98,6 +98,22 @@ export const webProjects: Project[] = [
 
 export const gameProjects: Project[] = [
   {
+    id: 'hintless',
+    title: 'Hintless',
+    year: '2026',
+    kind: 'game',
+    role: 'Design, Code',
+    desc: 'An asymmetric multiplayer puzzle game. One Curator, 1–4 Explorers, and hints you should not fully trust.',
+    tags: ['Godot', 'GDScript', 'Multiplayer'],
+    accent: 'plum',
+    thumb: 'hintless',
+    body: [
+      'One player hosts as the Curator. Everyone else explores a gallery and solves a puzzle chain while the hints get unreliable.',
+      'Lights Out is the sabotage: a temporary blackout of one room, host-authoritative, on a cooldown. It does not block the puzzle.',
+      'Still in prototype. No Steam page yet. The loop is lobby to round to lobby, no restart.',
+    ],
+  },
+  {
     id: 'moth',
     title: 'Moth',
     year: '2025',
@@ -164,6 +180,21 @@ export const gameProjects: Project[] = [
 ];
 
 export const posts: Post[] = [
+  {
+    id: 'p005',
+    date: '2026-08',
+    title: 'Trust no one. Especially your friends.',
+    excerpt:
+      'Hintless is an asymmetric multiplayer puzzle game I am building in Godot 4. One Curator, a few Explorers, and hints you should not fully trust.',
+    read: '5 min',
+    tag: 'Devlog',
+    thumb: 'devlog',
+    body: [
+      'Hintless is a 2–5 player game: one Curator, one to four Explorers, Steam P2P. The tagline is doing a lot of work on purpose.',
+      'The round is one graybox gallery, one puzzle chain I am calling Three Portraits, hints that might be true or might not, then a Lights Out sabotage. Back to the lobby without restarting.',
+      'Current milestone is a playable friendslop prototype. Art direction is a brutalist surrealist gallery — burgundy, gold, dark wood, funny horror. Godot 4 is already in.',
+    ],
+  },
   {
     id: 'p001',
     date: '2026-04',
