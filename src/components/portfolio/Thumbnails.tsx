@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 import type { Post } from '../../data/portfolioContent';
 
-// ─── PRNG ─────────────────────────────────────────────────────────────────────
+// ─── PRNG ─────────────────────────────────────────────────────────────
 
 function mulberry32(seed: number) {
   return function () {
@@ -12,7 +12,7 @@ function mulberry32(seed: number) {
   };
 }
 
-// ─── Project thumb SVGs ───────────────────────────────────────────────────────
+// ─── Project thumb SVGs ───────────────────────────────────────────────
 
 function ThumbAtlas() {
   return (
@@ -152,6 +152,19 @@ function ThumbThicket() {
   );
 }
 
+function ThumbHintless() {
+  return (
+    <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%', display: 'block' }}>
+      <rect width="400" height="250" fill="#141414" />
+      <rect x="36" y="48" width="96" height="140" fill="#6B2BFF" stroke="#FFC83D" strokeWidth="4" />
+      <rect x="152" y="36" width="96" height="164" fill="#FF3B1F" stroke="#FFC83D" strokeWidth="4" />
+      <rect x="268" y="48" width="96" height="140" fill="#6B2BFF" stroke="#FFC83D" strokeWidth="4" />
+      <text x="20" y="32" fontFamily="JetBrains Mono, monospace" fontSize="10" fontWeight="700" fill="#FFC83D" letterSpacing="2">GALLERY · 3 PORTRAITS</text>
+      <text x="200" y="228" textAnchor="middle" fontFamily="Bricolage Grotesque, sans-serif" fontWeight="800" fontSize="22" fill="#F4EFE6" letterSpacing="-1">HINTLESS</text>
+    </svg>
+  );
+}
+
 const THUMB_MAP: Record<string, () => ReactElement> = {
   atlas: ThumbAtlas,
   field: ThumbField,
@@ -161,6 +174,7 @@ const THUMB_MAP: Record<string, () => ReactElement> = {
   rewind: ThumbRewind,
   lattice: ThumbLattice,
   thicket: ThumbThicket,
+  hintless: ThumbHintless,
 };
 
 /** Absolute URL for <img src>; add https:// when there is no scheme (e.g. admin-pasted domains). */
